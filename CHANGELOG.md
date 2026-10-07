@@ -1,5 +1,15 @@
 # Changelog
 
+## 0.2.0-rc.2 — registry beta candidate
+
+- Canonical names: `haltseal-payments` and `@haltseal/payments`; registry publication pending.
+- Explicit hosted-fixture demo commands requiring only the selected language.
+- Credential-free record export and fixture/origin/redirect/output gates.
+- Manual OIDC registry workflow that verifies and publishes the GitHub release bytes.
+- Preserve v2 RC1 financial runtime/types and immutable RC4/v2 migration evidence.
+- Correct Python wheel license metadata for registry upload.
+
+
 ## 0.2.0-rc.1 · 2026-10-07
 
 SDK v2 security and recovery contract upgrade.

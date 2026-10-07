@@ -1,11 +1,20 @@
 # HALTSEAL Payments SDK for JavaScript
 
 Dependency-free ESM client for Node 22+, with TypeScript declarations.
-Install the tarball from a [versioned release](https://github.com/HALTSEAL/payments-sdk/releases).
-npm registry publication is not claimed.
+Registry beta candidate `0.2.0-rc.2`; npm publication is pending.
+After publication, in your project:
+
+```sh
+npm install @haltseal/payments@0.2.0-rc.2
+npx --no-install haltseal-payments-demo --output javascript-sandbox.json
+```
+
+The explicit demo creates a short-lived synthetic session at `https://haltseal.com`.
+Only Node is needed; the output omits its key and never overwrites an existing
+file. Offline tarballs remain available through versioned GitHub releases.
 
 ```js
-import {Client, UncertainDispatch} from '@haltseal/payments-evaluation';
+import {Client, UncertainDispatch} from '@haltseal/payments';
 
 // Persist operationId and the intended request before dispatch.
 const operationId = 'your-retained-operation-id';

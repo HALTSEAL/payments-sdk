@@ -7,6 +7,9 @@ import shutil
 import tempfile
 from build_release import build, ROOT
 from run_installed import install, host, examples, run
+import sys
+sys.path.insert(0, str(ROOT / "tests"))
+from check_sandbox import check as check_sandbox
 
 
 def main():
@@ -36,6 +39,8 @@ def main():
         assert responses == json.loads((work / "javascript-responses.json").read_text()), "Response validation differs across languages"
         run([python, "-I", ROOT / "tests/check_transport.py"], work)
         records = examples(work, python, js)
+        with host(ROOT / "tests/start-fixture.mjs", work, work / "cli-fixture-state") as origin:
+            sandbox = check_sandbox(work, python, js, origin)
         report = {"schema": "haltseal.payments-sdk.verification.v1", "tag": manifest["tag"],
                   "production": "NO_GO", "profile": "synthetic-http-only", "status": "PASS",
                   "http_failure_cases_per_language": len(py), "zero_send_checks_per_language": 7,
@@ -44,6 +49,7 @@ def main():
                   "response_validation_parity": "IDENTICAL", "reviewed_v2_runtime": "HASH_VERIFIED",
                   "public_rc4_baseline_archives": "UNCHANGED", "clean_builds": "BYTE_IDENTICAL",
                   "synthetic_dispatches_per_example": 2, "original_lookup_redispatches": 0,
+                  "installed_sandbox_demos": sandbox,
                   "artifact_sha256": first, "limitations": ["No native provider calls", "No retained payment kernel", "No customer deployment", "Production not qualified"]}
         if args.output:
             Path(args.output).write_text(json.dumps(report, indent=2, sort_keys=True) + "\n")

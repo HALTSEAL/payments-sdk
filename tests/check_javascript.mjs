@@ -1,6 +1,6 @@
 import assert from 'node:assert/strict';
 import fs from 'node:fs/promises';
-import {Client, APIError, TransportError, UncertainDispatch, ValidationError} from '@haltseal/payments-evaluation';
+import {Client, APIError, TransportError, UncertainDispatch, ValidationError} from '@haltseal/payments';
 const [origin, matrix, output] = process.argv.slice(2);
 const cases = JSON.parse(await fs.readFile(matrix, 'utf8'));
 const key = 'fixture-secret-not-for-output';

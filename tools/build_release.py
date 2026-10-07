@@ -43,12 +43,13 @@ def build(output):
     project, js = versions()
     output = Path(output).resolve()
     output.mkdir(parents=True, exist_ok=False)
-    dist = "haltseal_payments_evaluation-" + project["version"] + ".dist-info"
+    assert project["name"] == "haltseal-payments" and js["name"] == "@haltseal/payments", "Canonical package names required"
+    dist = "haltseal_payments-" + project["version"] + ".dist-info"
     files = {"haltseal_payments_sdk/" + name: (ROOT / "packages/python/haltseal_payments_sdk" / name).read_bytes()
-             for name in ["__init__.py", "_client.py", "_transport.py", "_types.py", "py.typed"]}
+             for name in ["__init__.py", "_client.py", "_transport.py", "_types.py", "py.typed", "sandbox.py"]}
     metadata = ("Metadata-Version: 2.4\nName: " + project["name"] + "\nVersion: " + project["version"]
                 + "\nSummary: " + project["description"] + "\nRequires-Python: " + project["requires-python"]
-                + "\nLicense-Expression: MIT\nLicense-File: licenses/LICENSE\n"
+                + "\nLicense-Expression: MIT\nLicense-File: LICENSE\n"
                 + "Project-URL: Source, https://github.com/HALTSEAL/payments-sdk\n"
                 + "Project-URL: Documentation, https://haltseal.com/docs/payments/\n"
                 + "Description-Content-Type: text/markdown\n\n" + (ROOT / "packages/python/README.md").read_text())
@@ -62,18 +63,19 @@ def build(output):
         writer.writerow([name, "sha256=" + digest, len(data)])
     writer.writerow([dist + "/RECORD", "", ""])
     files[dist + "/RECORD"] = record.getvalue().encode()
-    wheel_name = "haltseal_payments_evaluation-" + project["version"] + "-py3-none-any.whl"
+    wheel_name = "haltseal_payments-" + project["version"] + "-py3-none-any.whl"
     (output / wheel_name).write_bytes(zip_bytes(files))
 
     tarstream = io.BytesIO()
-    assert js["files"] == ["index.mjs", "index.d.ts", "README.md", "LICENSE"], "Unexpected package files"
+    assert js["files"] == ["index.mjs", "index.d.ts", "README.md", "LICENSE", "sandbox.mjs"], "Unexpected package files"
+    assert js["bin"] == {"haltseal-payments-demo": "sandbox.mjs"}, "Unexpected demo entry point"
     with tarfile.open(fileobj=tarstream, mode="w", format=tarfile.USTAR_FORMAT) as archive:
         for name in sorted(["package.json", *js["files"]]):
             data = (ROOT / "packages/javascript" / name).read_bytes()
             info = tarfile.TarInfo("package/" + name)
-            info.size, info.mode, info.mtime = len(data), 0o644, 0
+            info.size, info.mode, info.mtime = len(data), 0o755 if name == "sandbox.mjs" else 0o644, 0
             archive.addfile(info, io.BytesIO(data))
-    tarball_name = "haltseal-payments-evaluation-" + js["version"] + ".tgz"
+    tarball_name = "haltseal-payments-" + js["version"] + ".tgz"
     with (output / tarball_name).open("wb") as raw:
         with gzip.GzipFile(filename="", mode="wb", fileobj=raw, mtime=0, compresslevel=9) as archive:
             archive.write(tarstream.getvalue())
@@ -93,7 +95,9 @@ def build(output):
     manifest = {"schema": "haltseal.payments-sdk.release.v1", "tag": "v" + js["version"],
                 "python_version": project["version"], "javascript_version": js["version"],
                 "production": "NO_GO", "scope": "Evaluation clients and synthetic HTTP fixtures only",
-                "client_baseline": provenance["files"], "runtime_migration": provenance["runtime_migration"], "files": dict(hashes),
+                "packages": {"python": project["name"], "javascript": js["name"]},
+                "client_baseline": provenance["files"], "runtime_migration": provenance["runtime_migration"],
+                "registry_beta": provenance["registry_beta"], "files": dict(hashes),
                 "source_files": {name: hashlib.sha256((ROOT / name).read_bytes()).hexdigest() for name in allowlist}}
     (output / "manifest.json").write_text(json.dumps(manifest, indent=2, sort_keys=True) + "\n")
     hashes["manifest.json"] = hashlib.sha256((output / "manifest.json").read_bytes()).hexdigest()

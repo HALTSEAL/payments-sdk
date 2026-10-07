@@ -1,5 +1,5 @@
 import fs from 'node:fs/promises';
-import {Client, UncertainDispatch} from '@haltseal/payments-evaluation';
+import {Client, UncertainDispatch} from '@haltseal/payments';
 const origin = process.argv[2] ?? 'http://127.0.0.1:8799';
 async function http(path, body, key) {
   const r = await fetch(origin + path, {method: body === undefined ? 'GET' : 'POST',

@@ -1,8 +1,16 @@
 # HALTSEAL Payments SDK for Python
 
-Dependency-free client for Python 3.12+. Install the wheel from a
-[versioned release](https://github.com/HALTSEAL/payments-sdk/releases).
-PyPI publication is not claimed.
+Dependency-free client for Python 3.12+. Registry beta candidate `0.2.0rc2`; PyPI publication is pending.
+After publication, in a fresh virtual environment:
+
+```sh
+python -m pip install haltseal-payments==0.2.0rc2
+python -m haltseal_payments_sdk.sandbox --output python-sandbox.json
+```
+
+The explicit demo creates a short-lived synthetic session at `https://haltseal.com`.
+Only Python is needed; the output omits its key and never overwrites an existing
+file. Offline wheels remain available through versioned GitHub releases.
 
 ```python
 from haltseal_payments_sdk import Client, UncertainDispatch

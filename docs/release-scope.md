@@ -33,3 +33,12 @@ Manual releases must also run from main. Release artifacts receive a GitHub
 build-provenance attestation, attached as `build-attestation.jsonl`. Existing tags/assets are preserved;
 repeat automatic events skip an already published version, while an explicit
 manual overwrite request fails. Registry publication is a separate step.
+
+## Registry beta candidate
+
+`0.2.0-rc.2` adds canonical distribution names, explicit single-language hosted
+fixture demos and a manual registry workflow. Public registry availability is
+pending owner setup and verified uploads. The workflow rebuilds an existing
+GitHub prerelease and compares its exact downloaded bytes before upload. Registry
+metadata and hosted example success do not qualify payment authority or production.
+See [registry launch](registry-release.md) for the account-owner setup and migration.

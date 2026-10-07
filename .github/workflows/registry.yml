@@ -1,0 +1,160 @@
+name: Publish SDK registries
+on:
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: Existing GitHub prerelease tag, e.g. v0.2.0-rc.2
+        required: true
+        type: string
+      registry:
+        description: Use one registry to recover a partially completed first release
+        required: true
+        default: both
+        type: choice
+        options: [both, pypi, npm]
+      publish:
+        description: Publish the verified artifacts (false runs release checks only)
+        required: true
+        default: false
+        type: boolean
+permissions:
+  contents: read
+concurrency:
+  group: payments-sdk-registries
+  cancel-in-progress: false
+jobs:
+  verify:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    outputs:
+      python_version: ${{ steps.version.outputs.python_version }}
+      javascript_version: ${{ steps.version.outputs.javascript_version }}
+    env:
+      REQUESTED_TAG: ${{ inputs.tag }}
+      GH_TOKEN: ${{ github.token }}
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+      - name: Select an existing prerelease from main history
+        run: |
+          python -c 'import os,re; assert re.fullmatch(r"v[0-9]+\.[0-9]+\.[0-9]+-rc\.[0-9]+", os.environ["REQUESTED_TAG"])'
+          python -c 'import os; assert os.environ["GITHUB_REF"] == "refs/tags/" + os.environ["REQUESTED_TAG"], "Run this workflow from the selected release tag"'
+          git rev-parse --verify "refs/tags/$REQUESTED_TAG^{commit}"
+          test "$(git rev-parse "refs/tags/$REQUESTED_TAG^{commit}")" = "$GITHUB_SHA"
+          git merge-base --is-ancestor "refs/tags/$REQUESTED_TAG^{commit}" origin/main
+          git checkout --detach "refs/tags/$REQUESTED_TAG"
+          gh release view "$REQUESTED_TAG" --json isDraft,isPrerelease --jq 'select(.isDraft == false and .isPrerelease == true)' > release-status.json
+          test -s release-status.json
+      - uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97
+        with:
+          python-version: '3.12'
+      - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020
+        with:
+          node-version: '24'
+      - name: Check clients and rebuild the selected release
+        run: |
+          python tools/check.py --output registry-verification.json
+          python tools/check_types.py
+          python tools/build_release.py --output rebuilt --expect-tag "$REQUESTED_TAG"
+      - name: Download and verify the already released artifacts
+        run: |
+          gh release download "$REQUESTED_TAG" --dir released --pattern '*.whl' --pattern '*.tgz' --pattern manifest.json --pattern SHA256SUMS.txt
+          python tools/verify_registry_release.py released --tag "$REQUESTED_TAG" --expected rebuilt
+          mkdir pypi npm
+          cp released/*.whl pypi/
+          cp released/*.tgz npm/
+      - name: Resolve checked package versions
+        id: version
+        run: |
+          python - <<'PY'
+          import json, os, tomllib
+          from pathlib import Path
+          p = tomllib.loads(Path('packages/python/pyproject.toml').read_text())['project']
+          j = json.loads(Path('packages/javascript/package.json').read_text())
+          with open(os.environ['GITHUB_OUTPUT'], 'a') as output:
+              print('python_version=' + p['version'], file=output)
+              print('javascript_version=' + j['version'], file=output)
+          PY
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: registry-python
+          path: pypi/*.whl
+          if-no-files-found: error
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: registry-javascript
+          path: npm/*.tgz
+          if-no-files-found: error
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: registry-verification
+          path: registry-verification.json
+          if-no-files-found: error
+  pypi:
+    needs: verify
+    if: inputs.publish && (inputs.registry == 'both' || inputs.registry == 'pypi')
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    environment:
+      name: pypi
+      url: https://pypi.org/p/haltseal-payments
+    permissions:
+      contents: read
+      id-token: write
+    steps:
+      - uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093
+        with:
+          name: registry-python
+          path: dist
+      - name: Publish the verified wheel with PyPI Trusted Publishing
+        uses: pypa/gh-action-pypi-publish@dc37677b2e1c63e2034f94d8a5b11f265b73ba33
+        with:
+          attestations: true
+      - uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97
+        with:
+          python-version: '3.12'
+      - name: Verify the registry download and first Python-only run
+        env:
+          SDK_VERSION: ${{ needs.verify.outputs.python_version }}
+        run: |
+          python -m pip download --no-deps --only-binary=:all: "haltseal-payments==$SDK_VERSION" --dest downloaded
+          cmp dist/*.whl downloaded/*.whl
+          python -m venv customer-python
+          customer-python/bin/python -m pip install --no-index --no-deps downloaded/*.whl
+          customer-python/bin/python -I -m haltseal_payments_sdk.sandbox --output python-sandbox.json
+  npm:
+    needs: verify
+    if: inputs.publish && (inputs.registry == 'both' || inputs.registry == 'npm')
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    environment:
+      name: npm
+      url: https://www.npmjs.com/package/@haltseal/payments
+    permissions:
+      contents: read
+      id-token: write
+    steps:
+      - uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093
+        with:
+          name: registry-javascript
+          path: dist
+      - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020
+        with:
+          node-version: '24'
+      - name: Check npm OIDC support
+        run: node -e 'const {execSync}=require("node:child_process");const v=execSync("npm --version").toString().trim().split(".").map(Number);if(v[0]<11 || v[0]===11 && (v[1]<5 || v[1]===5 && v[2]<1))process.exit(1)'
+      - name: Publish the verified tarball to the next channel
+        run: npm publish ./dist/*.tgz --access public --tag next --provenance --ignore-scripts
+      - name: Verify the registry download and first Node-only run
+        env:
+          SDK_VERSION: ${{ needs.verify.outputs.javascript_version }}
+        run: |
+          mkdir downloaded customer-node
+          npm pack "@haltseal/payments@$SDK_VERSION" --pack-destination downloaded --ignore-scripts
+          cmp dist/*.tgz downloaded/*.tgz
+          cd customer-node
+          npm init -y
+          npm install --offline --ignore-scripts --no-audit --no-fund ../downloaded/*.tgz
+          npx --no-install haltseal-payments-demo --output javascript-sandbox.json

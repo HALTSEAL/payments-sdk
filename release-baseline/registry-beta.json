@@ -1,0 +1,23 @@
+{
+  "changes": [
+    "Canonical distribution names; Python import remains haltseal_payments_sdk",
+    "Version metadata only; v2 financial client runtime and types unchanged",
+    "Explicit hosted-fixture demos; no automatic demo calls during imports or installation"
+  ],
+  "client_source_commit": "2db40f503300b056f2af6ce535f0dc7671fa6881",
+  "from_version": "0.2.0-rc.1",
+  "reviewed_runtime_sha256": {
+    "packages/javascript/index.d.ts": "cf0f87f53fce38c6f8ade88abc22f7f08b8709216f0a85b864b192c54aa1b3f7",
+    "packages/javascript/index.mjs": "bde42123a15a0a17f01768e493b974e94a3a18e58a47165d0d8cf53994beac84",
+    "packages/javascript/sandbox.mjs": "8bf3efe34a6b06e4214bcaf16b44b60edc664be91156bfedadb8f28d498bf073",
+    "packages/python/haltseal_payments_sdk/__init__.py": "e89327d0f906a8e353a1a3896510eefc7652a56259079f3463be9b4fbbb0eaa4",
+    "packages/python/haltseal_payments_sdk/_client.py": "82b4be7ff70eb9585716359319a57bd94f5b5c640e55d03d95c7060d434783c6",
+    "packages/python/haltseal_payments_sdk/_transport.py": "394563b84fe4a83e42e1bc5fc72fdbebf2533a48221b83ab07a64383fa2da8ba",
+    "packages/python/haltseal_payments_sdk/_types.py": "17b95ba8cdeb100f251736971cd5bca1f10caf549d4be9b8c4c7e91f397cb206",
+    "packages/python/haltseal_payments_sdk/py.typed": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "packages/python/haltseal_payments_sdk/sandbox.py": "5cfde8b51c3b5f121c7fe0e4dcc62c2926091cbb312db9fe82bc2918f51d9782"
+  },
+  "schema": "haltseal.sdk.registry-beta.v1",
+  "scope": "MIT clients and explicit synthetic demos. Production NO_GO. Registry publication pending.",
+  "to_version": "0.2.0-rc.2"
+}

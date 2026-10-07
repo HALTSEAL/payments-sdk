@@ -1,6 +1,6 @@
 {
-  "name": "@haltseal/payments-evaluation",
-  "version": "0.2.0-rc.1",
+  "name": "@haltseal/payments",
+  "version": "0.2.0-rc.2",
   "type": "module",
   "exports": {
     ".": {
@@ -12,7 +12,8 @@
     "index.mjs",
     "index.d.ts",
     "README.md",
-    "LICENSE"
+    "LICENSE",
+    "sandbox.mjs"
   ],
   "engines": {
     "node": ">=22"
@@ -27,5 +28,12 @@
   "homepage": "https://haltseal.com/docs/payments/",
   "bugs": {
     "url": "https://github.com/HALTSEAL/payments-sdk/issues"
+  },
+  "bin": {
+    "haltseal-payments-demo": "sandbox.mjs"
+  },
+  "publishConfig": {
+    "access": "public",
+    "tag": "next"
   }
 }
