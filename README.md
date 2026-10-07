@@ -6,6 +6,9 @@ Official Python and JavaScript clients for the HALTSEAL Payment API evaluation.
 When a payment request loses its reply, retain its identity and look up the
 original. The SDK does not automatically retry or select another route.
 
+**SDK v2 · `0.2.0-rc.1`** strengthens exact-original response verification and
+total caller deadlines. This is an evaluation prerelease, not production activation.
+
 [![SDK checks](https://github.com/HALTSEAL/payments-sdk/actions/workflows/quality.yml/badge.svg)](https://github.com/HALTSEAL/payments-sdk/actions/workflows/quality.yml)
 
 [Browser sandbox](https://haltseal.com/sandbox/) ·
@@ -24,7 +27,7 @@ cd payments-sdk
 python3 tools/quickstart.py
 ```
 
-This verifies the public RC4 provenance, builds and installs both packages into
+This verifies the preserved RC4 baseline and reviewed v2 migration, builds and installs both packages into
 temporary environments, starts a local synthetic HTTP server and runs both
 clients. It closes the server when finished. No provider or kernel is called.
 
@@ -54,8 +57,8 @@ Download the wheel or tarball and `SHA256SUMS.txt` from a
 the checksum, then install the local file:
 
 ```sh
-python3 -m pip install --no-deps ./haltseal_payments_evaluation-0.1.0rc4-py3-none-any.whl
-npm install --ignore-scripts --no-audit --no-fund ./haltseal-payments-evaluation-0.1.0-rc.4.tgz
+python3 -m pip install --no-index --no-deps ./haltseal_payments_evaluation-0.2.0rc1-py3-none-any.whl
+npm install --offline --ignore-scripts --no-audit --no-fund ./haltseal-payments-evaluation-0.2.0-rc.1.tgz
 ```
 
 The package names are `haltseal-payments-evaluation` and
@@ -79,6 +82,25 @@ Python imports from `haltseal_payments_sdk`; JavaScript imports from
 no business-level retry, fallback or replacement authority. Read the
 [method map and errors](docs/recovery.md).
 
+## What v2 verifies
+
+| Boundary | Client behavior |
+| --- | --- |
+| Exact original | Creation and lookup must echo the requested operation ID |
+| Payment identity | Creation must match the obligation; nested attempt identities must agree |
+| Retained obligation | Pass it to original lookup for an additional independent check |
+| Complete records | Attempt reads and nested records require all typed identity, amount, state and evidence fields |
+| Observation summaries | `OBSERVED` must match the attempt ID and state; expanded records must be complete |
+| Whole transport deadline | Connection, headers, body and validation share one caller deadline |
+| Uncertain modifying call | Retain `UncertainDispatch` and the original context; no automatic resend |
+
+Python: `client.lookup_operation(error.operation_id, obligation_id=error.obligation_id)`.
+JavaScript: `client.lookupOperation(error.operationId, {obligationId: error.obligationId})`.
+Keep the retained obligation with your original request. A timeout cannot prove
+that the server stopped or that the original payment is closed.
+
+[Upgrade from RC4](docs/migration-v2.md) · [Security boundaries](docs/security-model.md)
+
 ## Verify what you install
 
 ```sh
@@ -86,11 +108,11 @@ python3 tools/check.py
 python3 tools/build_release.py --output dist
 ```
 
-Checks install built packages outside the source checkout, run the same HTTP
-failure cases in both languages, execute the examples and compare two clean
-builds byte for byte. Runtime and type files are verified against public RC4.
-Packaging and README metadata can differ from the original website archives;
-verify each release's own checksums.
+Checks install built packages outside the source checkout, run 29 shared HTTP
+fault cases and 101 response identity/record cases in each language, execute the
+examples and compare two clean builds byte for byte. The RC4 archives stay
+unchanged; `release-baseline/v2-migration.json` pins the reviewed v2 runtime.
+Verify the new release's own checksums. The API profile and SDK version are separate.
 
 | Path | Contents |
 | --- | --- |

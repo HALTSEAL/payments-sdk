@@ -3,6 +3,7 @@ from dataclasses import FrozenInstanceError
 import json
 from pathlib import Path
 import sys
+import time
 from urllib.request import urlopen
 from haltseal_payments_sdk import Client, APIError, TransportError, UncertainDispatch, ValidationError
 
@@ -22,13 +23,14 @@ for case in cases:
     before = stats().get(case["id"], 0)
     with Client(origin, key, timeout=case.get("timeout_ms", 2000) / 1000, on_event=events.append) as client:
         try:
+            started = time.monotonic()
             kind = case["kind"]
             if kind == "create":
                 client.create_attempt("test-obligation", operation_id=case["id"], route="A", approval_revision=1)
             elif kind == "lookup":
                 client.lookup_operation(case["id"])
             elif kind == "source":
-                client.approve_source(json.dumps({"test_case": case["id"]}, separators=(",", ":")))
+                client.approve_source(case.get("raw_source") or json.dumps({"test_case": case["id"]}, separators=(",", ":")))
             elif kind == "resume":
                 client.resume(case["id"], approval_revision=1)
             else:
@@ -36,6 +38,9 @@ for case in cases:
             raise AssertionError("Expected recovery error: " + case["id"])
         except (APIError, TransportError) as error:
             assert type(error).__name__ == case["expected_error"], (case["id"], type(error).__name__)
+            if "expected_code" in case:
+                assert error.code == case["expected_code"], (case["id"], error.code)
+                assert (time.monotonic() - started) * 1000 < 800, "Caller exceeded total deadline"
             context = error.recovery.to_dict()
             assert context["action"] == case["action"], case["id"]
             assert context["request_may_have_executed"] == (kind not in ["lookup", "attempt"])

@@ -1,0 +1,37 @@
+{
+  "baseline_runtime_sha256": {
+    "packages/javascript/LICENSE": "cad8be1f5bb1dd3a9ee32325b590f75c0303fe79864812d368833602fcbb04f4",
+    "packages/javascript/index.d.ts": "713509fecb45d4c14fd18b8b2c96aa772807f7d254a86e40e2d656fb15f6b970",
+    "packages/javascript/index.mjs": "7a9acc44803e905a62ec0abefc28e54c8292e8d5a3188662faa2ee3a09e4c066",
+    "packages/python/haltseal_payments_sdk/__init__.py": "0511b9a087be58030e27d26d996e4e08af48628d3631284d6f4e9269a6c935f1",
+    "packages/python/haltseal_payments_sdk/_client.py": "48007599e81f87d76323c2496ed1b744a26f476a6d1161eee45b8a3d693b1220",
+    "packages/python/haltseal_payments_sdk/_types.py": "e953ec077b36216829dfe295d9928ebf68205fd77a0af7dca16656f8e1fedfdc",
+    "packages/python/haltseal_payments_sdk/py.typed": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  "changes": [
+    "Exact operation and obligation response binding",
+    "Complete attempt records and cross-record consistency",
+    "Optional retained obligation binding on original lookup",
+    "Total caller deadline across connect, headers, body and validation",
+    "Bounded one-send Python transport workers and cleanup",
+    "Original signed JSON text required in both languages"
+  ],
+  "from_version": "0.1.0-rc.4",
+  "response_contract_alignment": {
+    "commit": "038cfb51e7a2dbc69b3a4955e3568a647416b245",
+    "profile": "Payment API RC5 local evaluation; client response guards only",
+    "repository": "meridianverity/haltseal.com"
+  },
+  "reviewed_runtime_sha256": {
+    "packages/javascript/index.d.ts": "cf0f87f53fce38c6f8ade88abc22f7f08b8709216f0a85b864b192c54aa1b3f7",
+    "packages/javascript/index.mjs": "bde42123a15a0a17f01768e493b974e94a3a18e58a47165d0d8cf53994beac84",
+    "packages/python/haltseal_payments_sdk/__init__.py": "c9da8ba753c94a9b0a93f829e68bcfe064b5f43ffe31470a6d91f7f3d84c8f44",
+    "packages/python/haltseal_payments_sdk/_client.py": "82b4be7ff70eb9585716359319a57bd94f5b5c640e55d03d95c7060d434783c6",
+    "packages/python/haltseal_payments_sdk/_transport.py": "394563b84fe4a83e42e1bc5fc72fdbebf2533a48221b83ab07a64383fa2da8ba",
+    "packages/python/haltseal_payments_sdk/_types.py": "17b95ba8cdeb100f251736971cd5bca1f10caf549d4be9b8c4c7e91f397cb206",
+    "packages/python/haltseal_payments_sdk/py.typed": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  "schema": "haltseal.sdk.runtime-migration.v2",
+  "scope": "MIT clients and synthetic fixtures. Evaluation only; production NO_GO.",
+  "to_version": "0.2.0-rc.1"
+}

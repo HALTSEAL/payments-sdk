@@ -11,6 +11,8 @@ ROOT = Path(__file__).resolve().parents[1]
 def verify():
     baseline = ROOT / "release-baseline"
     provenance = json.loads((baseline / "provenance.json").read_text())
+    migration = json.loads((baseline / "v2-migration.json").read_text())
+    old_runtime = {}
     for name, record in provenance["files"].items():
         archive = baseline / name
         assert hashlib.sha256(archive.read_bytes()).hexdigest() == record["sha256"], name
@@ -18,19 +20,26 @@ def verify():
             with zipfile.ZipFile(archive) as source:
                 for path in source.namelist():
                     if path.startswith("haltseal_payments_sdk/"):
-                        assert source.read(path) == (ROOT / "packages/python" / path).read_bytes(), path
+                        old_runtime["packages/python/" + path] = hashlib.sha256(source.read(path)).hexdigest()
                 license_path = next(p for p in source.namelist() if p.endswith("/licenses/LICENSE"))
                 assert source.read(license_path) == (ROOT / "packages/python/LICENSE").read_bytes()
         else:
             with tarfile.open(archive) as source:
                 for name in ["index.mjs", "index.d.ts", "LICENSE"]:
-                    assert source.extractfile("package/" + name).read() == (ROOT / "packages/javascript" / name).read_bytes(), name
+                    old_runtime["packages/javascript/" + name] = hashlib.sha256(source.extractfile("package/" + name).read()).hexdigest()
+    assert migration["from_version"] == "0.1.0-rc.4" and migration["to_version"] == "0.2.0-rc.1"
+    assert migration["baseline_runtime_sha256"] == old_runtime, "RC4 runtime provenance changed"
+    expected = {"packages/python/haltseal_payments_sdk/" + name for name in ["__init__.py", "_client.py", "_transport.py", "_types.py", "py.typed"]}
+    expected |= {"packages/javascript/index.mjs", "packages/javascript/index.d.ts"}
+    assert set(migration["reviewed_runtime_sha256"]) == expected, "Unexpected reviewed runtime surface"
+    for name, sha in migration["reviewed_runtime_sha256"].items():
+        assert hashlib.sha256((ROOT / name).read_bytes()).hexdigest() == sha, "Review and refresh migration record: " + name
     for name, sha in provenance["fixture_source"]["files"].items():
         assert hashlib.sha256((ROOT / "tests/sandbox" / name).read_bytes()).hexdigest() == sha, name
     assert (ROOT / "LICENSE").read_bytes() == (ROOT / "packages/python/LICENSE").read_bytes()
-    return provenance
+    return {**provenance, "runtime_migration": migration}
 
 
 if __name__ == "__main__":
     verify()
-    print("PASS: public RC4 runtime/type and fixture provenance.")
+    print("PASS: unchanged public RC4 archives, reviewed SDK v2 migration and fixture provenance.")

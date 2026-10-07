@@ -5,15 +5,18 @@ from urllib.request import Request
 
 PaymentState = Literal["PREPARED", "EXPOSED", "PENDING", "IN_TRANSIT", "PAID", "CLOSED", "FAILED_REVIEW", "NEVER_DISPATCHED"]
 
-class AttemptRecord(TypedDict, total=False):
+class AttemptRecord(TypedDict):
     attempt_id: str
     obligation_id: str
     route: Literal["A", "B", "C"]
+    product_instance_id: str
     state: PaymentState
     execution_outcome: PaymentState | Literal["UNKNOWN", "PREPARED_BLOCKED"]
     amount_minor: int
     approval_revision: int
     ever_paid: bool
+    dispatch_intent_recorded: bool
+    source_status: str | None
     original_payment_id: str | int | None
     source_evidence_digest: str | None
     closure_profile: str | None
@@ -26,6 +29,7 @@ class PaymentResult(_Boundary, total=False):
     decision: Literal["ACCEPT", "HOLD", "REFUSE", "REGISTERED", "REVOKED", "OBSERVED"]
     reason: str
     obligation_id: str
+    operation_id: str
     attempt_id: str
     execution_outcome: PaymentState | Literal["UNKNOWN", "PREPARED_BLOCKED"]
     state: PaymentState

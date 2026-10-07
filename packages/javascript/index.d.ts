@@ -3,6 +3,7 @@ export type PaymentState = 'PREPARED' | 'EXPOSED' | 'PENDING' | 'IN_TRANSIT' | '
 export type ExecutionOutcome = PaymentState | 'UNKNOWN' | 'PREPARED_BLOCKED';
 export interface AttemptRecord {
   attempt_id: string; obligation_id: string; route: 'A' | 'B' | 'C';
+  product_instance_id: string; dispatch_intent_recorded: boolean; source_status: string | null;
   state: PaymentState; execution_outcome: ExecutionOutcome;
   amount_minor: number; approval_revision: number; ever_paid: boolean;
   original_payment_id: string | number | null;
@@ -11,6 +12,7 @@ export interface AttemptRecord {
 }
 export interface Result {
   decision?: Decision; reason?: string; obligation_id?: string; attempt_id?: string;
+  operation_id?: string;
   execution_outcome?: ExecutionOutcome; state?: PaymentState;
   historical_decision?: boolean; redispatched?: boolean; attempt?: AttemptRecord; attempts?: AttemptRecord[];
   available_principal_minor?: number; approval_revision?: number; approval_expires_at_ns?: string;
@@ -46,6 +48,7 @@ export class TransportError extends Error {
   obligationId: string | null; recoveryAction: RecoveryContext['action'];
   identityKind: RecoveryContext['identity_kind']; identityValue: string | null;
   requestFingerprint: string;
+  constructor(code: string, recovery: RecoveryContext, status?: number | null, requestId?: string | null);
 }
 export class UncertainDispatch extends TransportError {}
 export class Client {
@@ -55,7 +58,7 @@ export class Client {
   approveSource(signedSourceJson: string): Promise<Result>;
   obligation(id: string): Promise<Result>;
   createAttempt(id: string, options: { operationId: string; route: 'A' | 'B' | 'C'; approvalRevision: number }): Promise<Result>;
-  lookupOperation(id: string): Promise<Result>;
+  lookupOperation(id: string, options?: { obligationId?: string }): Promise<Result>;
   attempt(id: string): Promise<Result>;
   recover(id: string): Promise<Result>;
   cancel(id: string): Promise<Result>;

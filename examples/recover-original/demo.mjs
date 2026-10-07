@@ -18,7 +18,7 @@ try { await client.createAttempt(s.obligation_id, {operationId: 'demo-original',
 catch (e) {
   if (!(e instanceof UncertainDispatch)) throw e;
   require(e.operationId === 'demo-original' && e.recoveryAction === 'LOOKUP_OPERATION', 'Recovery context');
-  original = await client.lookupOperation(e.operationId);
+  original = await client.lookupOperation(e.operationId, {obligationId: e.obligationId});
   require(original.historical_decision && !original.redispatched, 'Original lookup');
   records.push({step: 'original lookup after withheld reply', result: original});
 }

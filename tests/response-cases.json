@@ -1,0 +1,1526 @@
+{
+  "schema": "haltseal.sdk.response-cases.v2",
+  "templates": {
+    "create": {
+      "mode": "local-evaluation",
+      "production": "NO_GO",
+      "decision": "ACCEPT",
+      "reason": "ADMITTED",
+      "operation_id": "$case",
+      "obligation_id": "test-obligation",
+      "attempt_id": "test-attempt",
+      "state": "EXPOSED",
+      "execution_outcome": "UNKNOWN"
+    },
+    "lookup": {
+      "mode": "local-evaluation",
+      "production": "NO_GO",
+      "decision": "ACCEPT",
+      "reason": "RECORDED",
+      "operation_id": "$case",
+      "obligation_id": "test-obligation",
+      "attempt_id": "test-attempt",
+      "state": "EXPOSED",
+      "execution_outcome": "UNKNOWN",
+      "historical_decision": true,
+      "redispatched": false,
+      "attempt": {
+        "attempt_id": "test-attempt",
+        "obligation_id": "test-obligation",
+        "product_instance_id": "test-product",
+        "route": "A",
+        "state": "CLOSED",
+        "execution_outcome": "CLOSED",
+        "amount_minor": 1000,
+        "approval_revision": 1,
+        "ever_paid": false,
+        "dispatch_intent_recorded": true,
+        "original_payment_id": "fixture-original",
+        "source_evidence_digest": "0000000000000000000000000000000000000000000000000000000000000000",
+        "source_status": "CLOSED_NO_EFFECT",
+        "closure_profile": "synthetic-no-effect"
+      }
+    },
+    "attempt": {
+      "mode": "local-evaluation",
+      "production": "NO_GO",
+      "attempt_id": "$case",
+      "obligation_id": "test-obligation",
+      "product_instance_id": "test-product",
+      "route": "A",
+      "state": "EXPOSED",
+      "execution_outcome": "UNKNOWN",
+      "amount_minor": 1000,
+      "approval_revision": 1,
+      "ever_paid": false,
+      "dispatch_intent_recorded": true,
+      "original_payment_id": "fixture-original",
+      "source_evidence_digest": null,
+      "source_status": "UNRESOLVED",
+      "closure_profile": null
+    },
+    "action": {
+      "mode": "local-evaluation",
+      "production": "NO_GO",
+      "attempt_id": "$case",
+      "obligation_id": "test-obligation",
+      "product_instance_id": "test-product",
+      "route": "A",
+      "state": "EXPOSED",
+      "execution_outcome": "UNKNOWN",
+      "amount_minor": 1000,
+      "approval_revision": 1,
+      "ever_paid": false,
+      "dispatch_intent_recorded": true,
+      "original_payment_id": "fixture-original",
+      "source_evidence_digest": null,
+      "source_status": "UNRESOLVED",
+      "closure_profile": null,
+      "decision": "OBSERVED",
+      "reason": "OBSERVED_ORIGINAL"
+    },
+    "action-hold": {
+      "mode": "local-evaluation",
+      "production": "NO_GO",
+      "attempt_id": "$case",
+      "state": "PREPARED",
+      "decision": "HOLD",
+      "reason": "REVIEW_REQUIRED"
+    },
+    "source": {
+      "mode": "local-evaluation",
+      "production": "NO_GO",
+      "decision": "REGISTERED",
+      "reason": "SIGNED_SOURCE_IMPORTED",
+      "obligation_id": "test-obligation"
+    },
+    "obligation": {
+      "mode": "local-evaluation",
+      "production": "NO_GO",
+      "obligation_id": "$case",
+      "amount_minor": 1000,
+      "available_principal_minor": 0,
+      "approval_revision": 2,
+      "approval_status": "APPROVED",
+      "approval_expires_at_ns": "1791376800000000000",
+      "attempts": [
+        {
+          "attempt_id": "test-attempt",
+          "obligation_id": "$case",
+          "product_instance_id": "test-product",
+          "route": "A",
+          "state": "EXPOSED",
+          "execution_outcome": "UNKNOWN",
+          "amount_minor": 1000,
+          "approval_revision": 1,
+          "ever_paid": false,
+          "dispatch_intent_recorded": true,
+          "original_payment_id": "fixture-original",
+          "source_evidence_digest": null,
+          "source_status": "UNRESOLVED",
+          "closure_profile": null
+        }
+      ]
+    },
+    "action-summary": {
+      "mode": "local-evaluation",
+      "production": "NO_GO",
+      "decision": "OBSERVED",
+      "reason": "EXACT_SOURCE_STATUS_RETAINED",
+      "attempt_id": "$case",
+      "state": "CLOSED"
+    },
+    "lookup-hold-summary": {
+      "mode": "local-evaluation",
+      "production": "NO_GO",
+      "decision": "HOLD",
+      "reason": "BLOCKED_ORIGINAL",
+      "operation_id": "$case",
+      "historical_decision": true,
+      "redispatched": false
+    },
+    "lookup-refuse-summary": {
+      "mode": "local-evaluation",
+      "production": "NO_GO",
+      "decision": "REFUSE",
+      "reason": "BLOCKED_ORIGINAL",
+      "operation_id": "$case",
+      "historical_decision": true,
+      "redispatched": false
+    }
+  },
+  "cases": [
+    {
+      "id": "valid-create",
+      "kind": "create",
+      "template": "create",
+      "valid": true
+    },
+    {
+      "id": "valid-lookup",
+      "kind": "lookup",
+      "template": "lookup",
+      "valid": true
+    },
+    {
+      "id": "valid-attempt",
+      "kind": "attempt",
+      "template": "attempt",
+      "valid": true
+    },
+    {
+      "id": "valid-obligation",
+      "kind": "obligation",
+      "template": "obligation",
+      "valid": true
+    },
+    {
+      "id": "valid-recover",
+      "kind": "recover",
+      "template": "action",
+      "valid": true
+    },
+    {
+      "id": "valid-cancel",
+      "kind": "cancel",
+      "template": "action",
+      "valid": true
+    },
+    {
+      "id": "valid-resume",
+      "kind": "resume",
+      "template": "action",
+      "valid": true
+    },
+    {
+      "id": "valid-source",
+      "kind": "source",
+      "template": "source",
+      "valid": true
+    },
+    {
+      "id": "valid-recover-hold",
+      "kind": "recover",
+      "template": "action-hold",
+      "valid": true
+    },
+    {
+      "id": "valid-cancel-hold",
+      "kind": "cancel",
+      "template": "action-hold",
+      "valid": true
+    },
+    {
+      "id": "valid-resume-hold",
+      "kind": "resume",
+      "template": "action-hold",
+      "valid": true
+    },
+    {
+      "id": "valid-lookup-bound",
+      "kind": "lookup",
+      "template": "lookup",
+      "valid": true,
+      "bind_obligation": true
+    },
+    {
+      "id": "create-wrong-operation_id",
+      "kind": "create",
+      "template": "create",
+      "valid": false,
+      "mutations": [
+        {
+          "path": [
+            "operation_id"
+          ],
+          "value": "wrong-identity"
+        }
+      ]
+    },
+    {
+      "id": "create-missing-operation_id",
+      "kind": "create",
+      "template": "create",
+      "valid": false,
+      "mutations": [
+        {
+          "path": [
+            "operation_id"
+          ],
+          "remove": true
+        }
+      ]
+    },
+    {
+      "id": "create-wrong-obligation_id",
+      "kind": "create",
+      "template": "create",
+      "valid": false,
+      "mutations": [
+        {
+          "path": [
+            "obligation_id"
+          ],
+          "value": "wrong-identity"
+        }
+      ]
+    },
+    {
+      "id": "create-missing-obligation_id",
+      "kind": "create",
+      "template": "create",
+      "valid": false,
+      "mutations": [
+        {
+          "path": [
+            "obligation_id"
+          ],
+          "remove": true
+        }
+      ]
+    },
+    {
+      "id": "lookup-wrong-operation_id",
+      "kind": "lookup",
+      "template": "lookup",
+      "valid": false,
+      "mutations": [
+        {
+          "path": [
+            "operation_id"
+          ],
+          "value": "wrong-identity"
+        }
+      ]
+    },
+    {
+      "id": "lookup-missing-operation_id",
+      "kind": "lookup",
+      "template": "lookup",
+      "valid": false,
+      "mutations": [
+        {
+          "path": [
+            "operation_id"
+          ],
+          "remove": true
+        }
+      ]
+    },
+    {
+      "id": "lookup-wrong-obligation_id",
+      "kind": "lookup",
+      "template": "lookup",
+      "valid": false,
+      "mutations": [
+        {
+          "path": [
+            "obligation_id"
+          ],
+          "value": "wrong-identity"
+        }
+      ]
+    },
+    {
+      "id": "lookup-missing-outer-obligation_id",
+      "kind": "lookup",
+      "template": "lookup",
+      "valid": false,
+      "mutations": [
+        {
+          "path": [
+            "obligation_id"
+          ],
+          "remove": true
+        }
+      ]
+    },
+    {
+      "id": "lookup-missing-attempt_id",
+      "kind": "lookup",
+      "template": "lookup",
+      "valid": false,
+      "mutations": [
+        {
+          "path": [
+            "attempt",
+            "attempt_id"
+          ],
+          "remove": true
+        }
+      ]
+    },
+    {
+      "id": "attempt-missing-attempt_id",
+      "kind": "attempt",
+      "template": "attempt",
+      "valid": false,
+      "mutations": [
+        {
+          "path": [
+            "attempt_id"
+          ],
+          "remove": true
+        }
+      ]
+    },
+    {
+      "id": "lookup-missing-obligation_id",
+      "kind": "lookup",
+      "template": "lookup",
+      "valid": false,
+      "mutations": [
+        {
+          "path": [
+            "attempt",
+            "obligation_id"
+          ],
+          "remove": true
+        }
+      ]
+    },
+    {
+      "id": "attempt-missing-obligation_id",
+      "kind": "attempt",
+      "template": "attempt",
+      "valid": false,
+      "mutations": [
+        {
+          "path": [
+            "obligation_id"
+          ],
+          "remove": true
+        }
+      ]
+    },
+    {
+      "id": "lookup-missing-product_instance_id",
+      "kind": "lookup",
+      "template": "lookup",
+      "valid": false,
+      "mutations": [
+        {
+          "path": [
+            "attempt",
+            "product_instance_id"
+          ],
+          "remove": true
+        }
+      ]
+    },
+    {
+      "id": "attempt-missing-product_instance_id",
+      "kind": "attempt",
+      "template": "attempt",
+      "valid": false,
+      "mutations": [
+        {
+          "path": [
+            "product_instance_id"
+          ],
+          "remove": true
+        }
+      ]
+    },
+    {
+      "id": "lookup-missing-route",
+      "kind": "lookup",
+      "template": "lookup",
+      "valid": false,
+      "mutations": [
+        {
+          "path": [
+            "attempt",
+            "route"
+          ],
+          "remove": true
+        }
+      ]
+    },
+    {
+      "id": "attempt-missing-route",
+      "kind": "attempt",
+      "template": "attempt",
+      "valid": false,
+      "mutations": [
+        {
+          "path": [
+            "route"
+          ],
+          "remove": true
+        }
+      ]
+    },
+    {
+      "id": "lookup-missing-state",
+      "kind": "lookup",
+      "template": "lookup",
+      "valid": false,
+      "mutations": [
+        {
+          "path": [
+            "attempt",
+            "state"
+          ],
+          "remove": true
+        }
+      ]
+    },
+    {
+      "id": "attempt-missing-state",
+      "kind": "attempt",
+      "template": "attempt",
+      "valid": false,
+      "mutations": [
+        {
+          "path": [
+            "state"
+          ],
+          "remove": true
+        }
+      ]
+    },
+    {
+      "id": "lookup-missing-execution_outcome",
+      "kind": "lookup",
+      "template": "lookup",
+      "valid": false,
+      "mutations": [
+        {
+          "path": [
+            "attempt",
+            "execution_outcome"
+          ],
+          "remove": true
+        }
+      ]
+    },
+    {
+      "id": "attempt-missing-execution_outcome",
+      "kind": "attempt",
+      "template": "attempt",
+      "valid": false,
+      "mutations": [
+        {
+          "path": [
+            "execution_outcome"
+          ],
+          "remove": true
+        }
+      ]
+    },
+    {
+      "id": "lookup-missing-amount_minor",
+      "kind": "lookup",
+      "template": "lookup",
+      "valid": false,
+      "mutations": [
+        {
+          "path": [
+            "attempt",
+            "amount_minor"
+          ],
+          "remove": true
+        }
+      ]
+    },
+    {
+      "id": "attempt-missing-amount_minor",
+      "kind": "attempt",
+      "template": "attempt",
+      "valid": false,
+      "mutations": [
+        {
+          "path": [
+            "amount_minor"
+          ],
+          "remove": true
+        }
+      ]
+    },
+    {
+      "id": "lookup-missing-approval_revision",
+      "kind": "lookup",
+      "template": "lookup",
+      "valid": false,
+      "mutations": [
+        {
+          "path": [
+            "attempt",
+            "approval_revision"
+          ],
+          "remove": true
+        }
+      ]
+    },
+    {
+      "id": "attempt-missing-approval_revision",
+      "kind": "attempt",
+      "template": "attempt",
+      "valid": false,
+      "mutations": [
+        {
+          "path": [
+            "approval_revision"
+          ],
+          "remove": true
+        }
+      ]
+    },
+    {
+      "id": "lookup-missing-ever_paid",
+      "kind": "lookup",
+      "template": "lookup",
+      "valid": false,
+      "mutations": [
+        {
+          "path": [
+            "attempt",
+            "ever_paid"
+          ],
+          "remove": true
+        }
+      ]
+    },
+    {
+      "id": "attempt-missing-ever_paid",
+      "kind": "attempt",
+      "template": "attempt",
+      "valid": false,
+      "mutations": [
+        {
+          "path": [
+            "ever_paid"
+          ],
+          "remove": true
+        }
+      ]
+    },
+    {
+      "id": "lookup-missing-dispatch_intent_recorded",
+      "kind": "lookup",
+      "template": "lookup",
+      "valid": false,
+      "mutations": [
+        {
+          "path": [
+            "attempt",
+            "dispatch_intent_recorded"
+          ],
+          "remove": true
+        }
+      ]
+    },
+    {
+      "id": "attempt-missing-dispatch_intent_recorded",
+      "kind": "attempt",
+      "template": "attempt",
+      "valid": false,
+      "mutations": [
+        {
+          "path": [
+            "dispatch_intent_recorded"
+          ],
+          "remove": true
+        }
+      ]
+    },
+    {
+      "id": "lookup-missing-original_payment_id",
+      "kind": "lookup",
+      "template": "lookup",
+      "valid": false,
+      "mutations": [
+        {
+          "path": [
+            "attempt",
+            "original_payment_id"
+          ],
+          "remove": true
+        }
+      ]
+    },
+    {
+      "id": "attempt-missing-original_payment_id",
+      "kind": "attempt",
+      "template": "attempt",
+      "valid": false,
+      "mutations": [
+        {
+          "path": [
+            "original_payment_id"
+          ],
+          "remove": true
+        }
+      ]
+    },
+    {
+      "id": "lookup-missing-source_evidence_digest",
+      "kind": "lookup",
+      "template": "lookup",
+      "valid": false,
+      "mutations": [
+        {
+          "path": [
+            "attempt",
+            "source_evidence_digest"
+          ],
+          "remove": true
+        }
+      ]
+    },
+    {
+      "id": "attempt-missing-source_evidence_digest",
+      "kind": "attempt",
+      "template": "attempt",
+      "valid": false,
+      "mutations": [
+        {
+          "path": [
+            "source_evidence_digest"
+          ],
+          "remove": true
+        }
+      ]
+    },
+    {
+      "id": "lookup-missing-source_status",
+      "kind": "lookup",
+      "template": "lookup",
+      "valid": false,
+      "mutations": [
+        {
+          "path": [
+            "attempt",
+            "source_status"
+          ],
+          "remove": true
+        }
+      ]
+    },
+    {
+      "id": "attempt-missing-source_status",
+      "kind": "attempt",
+      "template": "attempt",
+      "valid": false,
+      "mutations": [
+        {
+          "path": [
+            "source_status"
+          ],
+          "remove": true
+        }
+      ]
+    },
+    {
+      "id": "lookup-missing-closure_profile",
+      "kind": "lookup",
+      "template": "lookup",
+      "valid": false,
+      "mutations": [
+        {
+          "path": [
+            "attempt",
+            "closure_profile"
+          ],
+          "remove": true
+        }
+      ]
+    },
+    {
+      "id": "attempt-missing-closure_profile",
+      "kind": "attempt",
+      "template": "attempt",
+      "valid": false,
+      "mutations": [
+        {
+          "path": [
+            "closure_profile"
+          ],
+          "remove": true
+        }
+      ]
+    },
+    {
+      "id": "lookup-wrong-attempt",
+      "kind": "lookup",
+      "template": "lookup",
+      "valid": false,
+      "mutations": [
+        {
+          "path": [
+            "attempt",
+            "attempt_id"
+          ],
+          "value": "wrong-attempt"
+        }
+      ]
+    },
+    {
+      "id": "lookup-mixed-obligation",
+      "kind": "lookup",
+      "template": "lookup",
+      "valid": false,
+      "mutations": [
+        {
+          "path": [
+            "attempt",
+            "obligation_id"
+          ],
+          "value": "other-obligation"
+        }
+      ]
+    },
+    {
+      "id": "lookup-bad-route",
+      "kind": "lookup",
+      "template": "lookup",
+      "valid": false,
+      "mutations": [
+        {
+          "path": [
+            "attempt",
+            "route"
+          ],
+          "value": "D"
+        }
+      ]
+    },
+    {
+      "id": "lookup-negative-amount",
+      "kind": "lookup",
+      "template": "lookup",
+      "valid": false,
+      "mutations": [
+        {
+          "path": [
+            "attempt",
+            "amount_minor"
+          ],
+          "value": -1
+        }
+      ]
+    },
+    {
+      "id": "lookup-fractional-amount",
+      "kind": "lookup",
+      "template": "lookup",
+      "valid": false,
+      "mutations": [
+        {
+          "path": [
+            "attempt",
+            "amount_minor"
+          ],
+          "value": 1.5
+        }
+      ]
+    },
+    {
+      "id": "lookup-unsafe-amount",
+      "kind": "lookup",
+      "template": "lookup",
+      "valid": false,
+      "mutations": [
+        {
+          "path": [
+            "attempt",
+            "amount_minor"
+          ],
+          "value": 9007199254740992
+        }
+      ]
+    },
+    {
+      "id": "lookup-bool-revision",
+      "kind": "lookup",
+      "template": "lookup",
+      "valid": false,
+      "mutations": [
+        {
+          "path": [
+            "attempt",
+            "approval_revision"
+          ],
+          "value": true
+        }
+      ]
+    },
+    {
+      "id": "lookup-bool-payment-id",
+      "kind": "lookup",
+      "template": "lookup",
+      "valid": false,
+      "mutations": [
+        {
+          "path": [
+            "attempt",
+            "original_payment_id"
+          ],
+          "value": true
+        }
+      ]
+    },
+    {
+      "id": "lookup-bad-digest",
+      "kind": "lookup",
+      "template": "lookup",
+      "valid": false,
+      "mutations": [
+        {
+          "path": [
+            "attempt",
+            "source_evidence_digest"
+          ],
+          "value": "invalid"
+        }
+      ]
+    },
+    {
+      "id": "lookup-paid-closed",
+      "kind": "lookup",
+      "template": "lookup",
+      "valid": false,
+      "mutations": [
+        {
+          "path": [
+            "attempt",
+            "ever_paid"
+          ],
+          "value": true
+        }
+      ]
+    },
+    {
+      "id": "lookup-wrong-outcome",
+      "kind": "lookup",
+      "template": "lookup",
+      "valid": false,
+      "mutations": [
+        {
+          "path": [
+            "attempt",
+            "execution_outcome"
+          ],
+          "value": "PAID"
+        }
+      ]
+    },
+    {
+      "id": "lookup-empty-source-status",
+      "kind": "lookup",
+      "template": "lookup",
+      "valid": false,
+      "mutations": [
+        {
+          "path": [
+            "attempt",
+            "source_status"
+          ],
+          "value": ""
+        }
+      ]
+    },
+    {
+      "id": "lookup-wrong-bound-obligation",
+      "kind": "lookup",
+      "template": "lookup",
+      "valid": false,
+      "mutations": [
+        {
+          "path": [
+            "obligation_id"
+          ],
+          "value": "other-obligation"
+        },
+        {
+          "path": [
+            "attempt",
+            "obligation_id"
+          ],
+          "value": "other-obligation"
+        }
+      ],
+      "bind_obligation": true
+    },
+    {
+      "id": "lookup-redispatched",
+      "kind": "lookup",
+      "template": "lookup",
+      "valid": false,
+      "mutations": [
+        {
+          "path": [
+            "redispatched"
+          ],
+          "value": true
+        }
+      ]
+    },
+    {
+      "id": "lookup-not-historical",
+      "kind": "lookup",
+      "template": "lookup",
+      "valid": false,
+      "mutations": [
+        {
+          "path": [
+            "historical_decision"
+          ],
+          "value": false
+        }
+      ]
+    },
+    {
+      "id": "lookup-missing-nested",
+      "kind": "lookup",
+      "template": "lookup",
+      "valid": false,
+      "mutations": [
+        {
+          "path": [
+            "attempt"
+          ],
+          "remove": true
+        }
+      ]
+    },
+    {
+      "id": "lookup-orphan-nested",
+      "kind": "lookup",
+      "template": "lookup",
+      "valid": false,
+      "mutations": [
+        {
+          "path": [
+            "attempt_id"
+          ],
+          "remove": true
+        },
+        {
+          "path": [
+            "decision"
+          ],
+          "value": "HOLD"
+        }
+      ]
+    },
+    {
+      "id": "create-corrupt-nested",
+      "kind": "create",
+      "template": "create",
+      "valid": false,
+      "mutations": [
+        {
+          "path": [
+            "attempt"
+          ],
+          "value": {
+            "attempt_id": "test-attempt",
+            "obligation_id": "test-obligation",
+            "product_instance_id": "test-product",
+            "route": "A",
+            "state": "CLOSED",
+            "execution_outcome": "CLOSED",
+            "amount_minor": 1000,
+            "approval_revision": 1,
+            "ever_paid": false,
+            "dispatch_intent_recorded": true,
+            "original_payment_id": "fixture-original",
+            "source_evidence_digest": "0000000000000000000000000000000000000000000000000000000000000000",
+            "source_status": "CLOSED_NO_EFFECT",
+            "closure_profile": "synthetic-no-effect"
+          }
+        },
+        {
+          "path": [
+            "attempt",
+            "obligation_id"
+          ],
+          "value": "other-obligation"
+        }
+      ]
+    },
+    {
+      "id": "create-missing-outcome",
+      "kind": "create",
+      "template": "create",
+      "valid": false,
+      "mutations": [
+        {
+          "path": [
+            "execution_outcome"
+          ],
+          "remove": true
+        }
+      ]
+    },
+    {
+      "id": "create-redispatched",
+      "kind": "create",
+      "template": "create",
+      "valid": false,
+      "mutations": [
+        {
+          "path": [
+            "redispatched"
+          ],
+          "value": true
+        }
+      ]
+    },
+    {
+      "id": "create-missing-reason",
+      "kind": "create",
+      "template": "create",
+      "valid": false,
+      "mutations": [
+        {
+          "path": [
+            "reason"
+          ],
+          "remove": true
+        }
+      ]
+    },
+    {
+      "id": "attempt-wrong-id",
+      "kind": "attempt",
+      "template": "attempt",
+      "valid": false,
+      "mutations": [
+        {
+          "path": [
+            "attempt_id"
+          ],
+          "value": "wrong-attempt"
+        }
+      ]
+    },
+    {
+      "id": "attempt-paid-without-history",
+      "kind": "attempt",
+      "template": "attempt",
+      "valid": false,
+      "mutations": [
+        {
+          "path": [
+            "state"
+          ],
+          "value": "PAID"
+        },
+        {
+          "path": [
+            "execution_outcome"
+          ],
+          "value": "PAID"
+        }
+      ]
+    },
+    {
+      "id": "recover-wrong-id",
+      "kind": "recover",
+      "template": "action",
+      "valid": false,
+      "mutations": [
+        {
+          "path": [
+            "attempt_id"
+          ],
+          "value": "wrong-attempt"
+        }
+      ]
+    },
+    {
+      "id": "recover-missing-amount",
+      "kind": "recover",
+      "template": "action",
+      "valid": false,
+      "mutations": [
+        {
+          "path": [
+            "amount_minor"
+          ],
+          "remove": true
+        }
+      ]
+    },
+    {
+      "id": "cancel-wrong-id",
+      "kind": "cancel",
+      "template": "action-hold",
+      "valid": false,
+      "mutations": [
+        {
+          "path": [
+            "attempt_id"
+          ],
+          "value": "wrong-attempt"
+        }
+      ]
+    },
+    {
+      "id": "resume-missing-id",
+      "kind": "resume",
+      "template": "action-hold",
+      "valid": false,
+      "mutations": [
+        {
+          "path": [
+            "attempt_id"
+          ],
+          "remove": true
+        }
+      ]
+    },
+    {
+      "id": "source-missing-identity",
+      "kind": "source",
+      "template": "source",
+      "valid": false,
+      "mutations": [
+        {
+          "path": [
+            "obligation_id"
+          ],
+          "remove": true
+        }
+      ]
+    },
+    {
+      "id": "source-invalid-decision",
+      "kind": "source",
+      "template": "source",
+      "valid": false,
+      "mutations": [
+        {
+          "path": [
+            "decision"
+          ],
+          "value": "ACCEPT"
+        }
+      ]
+    },
+    {
+      "id": "obligation-wrong-id",
+      "kind": "obligation",
+      "template": "obligation",
+      "valid": false,
+      "mutations": [
+        {
+          "path": [
+            "obligation_id"
+          ],
+          "value": "other-obligation"
+        }
+      ]
+    },
+    {
+      "id": "obligation-mixed-attempt",
+      "kind": "obligation",
+      "template": "obligation",
+      "valid": false,
+      "mutations": [
+        {
+          "path": [
+            "attempts",
+            "0",
+            "obligation_id"
+          ],
+          "value": "other-obligation"
+        }
+      ]
+    },
+    {
+      "id": "obligation-excess-capacity",
+      "kind": "obligation",
+      "template": "obligation",
+      "valid": false,
+      "mutations": [
+        {
+          "path": [
+            "available_principal_minor"
+          ],
+          "value": 1001
+        }
+      ]
+    },
+    {
+      "id": "obligation-wrong-principal",
+      "kind": "obligation",
+      "template": "obligation",
+      "valid": false,
+      "mutations": [
+        {
+          "path": [
+            "attempts",
+            "0",
+            "amount_minor"
+          ],
+          "value": 999
+        }
+      ]
+    },
+    {
+      "id": "obligation-future-approval",
+      "kind": "obligation",
+      "template": "obligation",
+      "valid": false,
+      "mutations": [
+        {
+          "path": [
+            "attempts",
+            "0",
+            "approval_revision"
+          ],
+          "value": 3
+        }
+      ]
+    },
+    {
+      "id": "obligation-numeric-expiry",
+      "kind": "obligation",
+      "template": "obligation",
+      "valid": false,
+      "mutations": [
+        {
+          "path": [
+            "approval_expires_at_ns"
+          ],
+          "value": 1791376800000000000
+        }
+      ]
+    },
+    {
+      "id": "obligation-invalid-status",
+      "kind": "obligation",
+      "template": "obligation",
+      "valid": false,
+      "mutations": [
+        {
+          "path": [
+            "approval_status"
+          ],
+          "value": "UNKNOWN"
+        }
+      ]
+    },
+    {
+      "id": "obligation-duplicate-attempt",
+      "kind": "obligation",
+      "template": "obligation",
+      "valid": false,
+      "mutations": [
+        {
+          "path": [
+            "attempts"
+          ],
+          "value": [
+            {
+              "attempt_id": "test-attempt",
+              "obligation_id": "$case",
+              "product_instance_id": "test-product",
+              "route": "A",
+              "state": "EXPOSED",
+              "execution_outcome": "UNKNOWN",
+              "amount_minor": 1000,
+              "approval_revision": 1,
+              "ever_paid": false,
+              "dispatch_intent_recorded": true,
+              "original_payment_id": "fixture-original",
+              "source_evidence_digest": null,
+              "source_status": "UNRESOLVED",
+              "closure_profile": null
+            },
+            {
+              "attempt_id": "test-attempt",
+              "obligation_id": "$case",
+              "product_instance_id": "test-product",
+              "route": "A",
+              "state": "EXPOSED",
+              "execution_outcome": "UNKNOWN",
+              "amount_minor": 1000,
+              "approval_revision": 1,
+              "ever_paid": false,
+              "dispatch_intent_recorded": true,
+              "original_payment_id": "fixture-original",
+              "source_evidence_digest": null,
+              "source_status": "UNRESOLVED",
+              "closure_profile": null
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "create-wrong-mode",
+      "kind": "create",
+      "template": "create",
+      "valid": false,
+      "mutations": [
+        {
+          "path": [
+            "mode"
+          ],
+          "value": "production"
+        }
+      ]
+    },
+    {
+      "id": "create-wrong-production",
+      "kind": "create",
+      "template": "create",
+      "valid": false,
+      "mutations": [
+        {
+          "path": [
+            "production"
+          ],
+          "value": "GO"
+        }
+      ]
+    },
+    {
+      "id": "attempt-object-state",
+      "kind": "attempt",
+      "template": "attempt",
+      "valid": false,
+      "mutations": [
+        {
+          "path": [
+            "state"
+          ],
+          "value": {}
+        }
+      ]
+    },
+    {
+      "id": "attempt-array-state",
+      "kind": "attempt",
+      "template": "attempt",
+      "valid": false,
+      "mutations": [
+        {
+          "path": [
+            "state"
+          ],
+          "value": []
+        }
+      ]
+    },
+    {
+      "id": "attempt-object-route",
+      "kind": "attempt",
+      "template": "attempt",
+      "valid": false,
+      "mutations": [
+        {
+          "path": [
+            "route"
+          ],
+          "value": {}
+        }
+      ]
+    },
+    {
+      "id": "attempt-string-revision",
+      "kind": "attempt",
+      "template": "attempt",
+      "valid": false,
+      "mutations": [
+        {
+          "path": [
+            "approval_revision"
+          ],
+          "value": "1"
+        }
+      ]
+    },
+    {
+      "id": "create-object-decision",
+      "kind": "create",
+      "template": "create",
+      "valid": false,
+      "mutations": [
+        {
+          "path": [
+            "decision"
+          ],
+          "value": {}
+        }
+      ]
+    },
+    {
+      "id": "valid-recover-summary",
+      "kind": "recover",
+      "template": "action-summary",
+      "valid": true
+    },
+    {
+      "id": "valid-cancel-summary",
+      "kind": "cancel",
+      "template": "action-summary",
+      "valid": true
+    },
+    {
+      "id": "valid-resume-summary",
+      "kind": "resume",
+      "template": "action-summary",
+      "valid": true
+    },
+    {
+      "id": "lookup-hold-summary",
+      "kind": "lookup",
+      "template": "lookup-hold-summary",
+      "valid": true
+    },
+    {
+      "id": "lookup-hold-summary-bound-missing-obligation",
+      "kind": "lookup",
+      "template": "lookup-hold-summary",
+      "bind_obligation": true,
+      "valid": false
+    },
+    {
+      "id": "lookup-hold-summary-wrong-operation",
+      "kind": "lookup",
+      "template": "lookup-hold-summary",
+      "mutations": [
+        {
+          "path": [
+            "operation_id"
+          ],
+          "value": "wrong-operation"
+        }
+      ],
+      "valid": false
+    },
+    {
+      "id": "lookup-refuse-summary",
+      "kind": "lookup",
+      "template": "lookup-refuse-summary",
+      "valid": true
+    },
+    {
+      "id": "lookup-refuse-summary-bound-missing-obligation",
+      "kind": "lookup",
+      "template": "lookup-refuse-summary",
+      "bind_obligation": true,
+      "valid": false
+    },
+    {
+      "id": "lookup-refuse-summary-wrong-operation",
+      "kind": "lookup",
+      "template": "lookup-refuse-summary",
+      "mutations": [
+        {
+          "path": [
+            "operation_id"
+          ],
+          "value": "wrong-operation"
+        }
+      ],
+      "valid": false
+    }
+  ]
+}

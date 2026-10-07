@@ -24,7 +24,7 @@ try:
     client.create_attempt(obligation, operation_id="demo-original", route="A", approval_revision=1)
 except UncertainDispatch as lost:
     assert lost.operation_id == "demo-original" and lost.recovery_action == "LOOKUP_OPERATION"
-    original = client.lookup_operation(lost.operation_id)
+    original = client.lookup_operation(lost.operation_id, obligation_id=lost.obligation_id)
     assert original["historical_decision"] and not original["redispatched"]
     results.append({"step": "original lookup after withheld reply", "result": original})
 else:
