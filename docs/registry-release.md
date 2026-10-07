@@ -1,8 +1,33 @@
 # Registry beta launch
 
-Candidate: Python `haltseal-payments==0.2.0rc2`, npm
-`@haltseal/payments@0.2.0-rc.2`. **Registry publication is pending.** The names and
-npm scope ownership must be confirmed by the account owner before release.
+Release files: Python `haltseal-payments==0.2.0rc2`, npm
+`@haltseal/payments@0.2.0-rc.2`. **Registry publication is pending.** The reviewed
+files are available in the GitHub prerelease. Registry permissions and npm scope
+ownership still need to be confirmed by the account owner before publication.
+
+## Verified release checkpoint
+
+Checked on 2026-10-07. These results identify the reviewed RC2 release and do not
+establish registry availability.
+
+| Gate | Result and evidence |
+| --- | --- |
+| Reviewed preparation | [PR #2](https://github.com/HALTSEAL/payments-sdk/pull/2) merged at `b03f85abd6b7317c77ff6a8d082f4055bf46d61a`; its source tree matches the tested candidate |
+| Main SDK checks | [All five jobs passed](https://github.com/HALTSEAL/payments-sdk/actions/runs/37627640111), including installed clients and hosted fixture recovery |
+| GitHub release | [`v0.2.0-rc.2`](https://github.com/HALTSEAL/payments-sdk/releases/tag/v0.2.0-rc.2) published from that commit; [release checks and build attestation passed](https://github.com/HALTSEAL/payments-sdk/actions/runs/37627640112) |
+| Fresh release downloads | All seven assets matched the published digests; the wheel and tarball also matched the independent rebuild byte for byte |
+| Clean release-file installs | Installed Python and Node recovery examples each reproduced six steps, two synthetic dispatches and zero original-lookup redispatches |
+| Registry preflight | [Exact-tag rebuild and release-download verification passed](https://github.com/HALTSEAL/payments-sdk/actions/runs/37628225741) with publication disabled |
+| GitHub publishing environments | `pypi` and `npm` created with tag-only `v*-rc.*` deployment rules; the workflow also requires the exact released tag in main history |
+| Actual PyPI publication | [Attempt blocked](https://github.com/HALTSEAL/payments-sdk/actions/runs/37629483057): `invalid-publisher`, a valid OIDC token with no matching Trusted Publisher |
+| npm ownership and publication | `@haltseal` scope permission remains unverified; no authenticated initial npm upload was completed |
+| Registry-origin installation | Pending: both pinned registry version endpoints returned HTTP 404 at the checkpoint |
+
+The clean-install results above use downloaded GitHub release files. The registry
+download hash checks and registry-origin recovery runs remain pending. Configure
+the PyPI publisher with the exact values below, then rerun only the failed PyPI
+job. Complete npm's authenticated first upload separately before configuring its
+Trusted Publisher. Keep the RC2 tag and release assets unchanged.
 
 ## What is ready in the repository
 
