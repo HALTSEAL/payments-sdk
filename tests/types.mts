@@ -1,5 +1,5 @@
 import {Client, APIError, UncertainDispatch, type AttemptRecord, type Result,
-  type RecoveryContext} from '@haltseal/payments-evaluation';
+  type RecoveryContext} from '@haltseal/payments';
 
 async function integration(): Promise<Result> {
   const client = new Client({baseUrl: 'http://127.0.0.1:8799', apiKey: 'synthetic-type-key'});

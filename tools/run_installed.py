@@ -35,7 +35,7 @@ def install(work, artifacts):
     npm = shutil.which("npm.cmd" if os.name == "nt" else "npm")
     assert npm, "npm is required"
     run([npm, "install", "--ignore-scripts", "--no-audit", "--no-fund", "--offline", tarball], js, capture=True)
-    assert (js / "node_modules/@haltseal/payments-evaluation/index.mjs").is_file()
+    assert (js / "node_modules/@haltseal/payments/index.mjs").is_file()
     return python, js
 
 

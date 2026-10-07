@@ -1,19 +1,16 @@
-HALTSEAL Payments SDK v2: exact-original responses and total caller deadlines.
+HALTSEAL Payments SDK registry beta candidate.
 
-`0.2.0-rc.1` requires matching operation/obligation identities, validates complete
-attempt records and preserves recovery context on malformed or late responses.
-Python uses a bounded one-send transport with a total caller deadline. Original
-signed source JSON text is retained in both clients. RC4 archives are preserved;
-the reviewed runtime migration and this release's checksums identify the new code.
+`0.2.0-rc.2` adds canonical package names and explicit single-language hosted
+fixture commands while preserving the v2 exact-original client runtime/types.
+Python's import remains `haltseal_payments_sdk`; Node imports `@haltseal/payments`.
+Legacy RC4 and v2 RC1 archives remain unchanged. Use this release's checksums.
 
-Run `python3 tools/quickstart.py` from the source bundle for the synthetic
-original-recovery example in both installed clients. Run `python3 tools/check.py`
-for shared HTTP faults, response identity/record cases, recovery parity and clean-build
-reproducibility. The attached verification.json records the checks.
+PyPI/npm publication is pending owner setup. See `docs/registry-release.md` for
+publisher values, first npm upload, OIDC release checks and package-name migration.
+Run `python3 tools/quickstart.py` for an offline comparison of both clients.
 
-Evaluation only. Synthetic fixtures, no real funds, no native-provider or
+Evaluation only. Fixed synthetic fixtures, no real funds, no native-provider or
 retained-kernel qualification. Production remains NO_GO.
 
-API docs: https://haltseal.com/docs/payments/
 Browser sandbox: https://haltseal.com/sandbox/
 Workflow pilot: https://haltseal.com/pricing/#workflow

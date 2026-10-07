@@ -1,6 +1,6 @@
 import assert from 'node:assert/strict';
 import fs from 'node:fs/promises';
-import {Client, TransportError, UncertainDispatch} from '@haltseal/payments-evaluation';
+import {Client, TransportError, UncertainDispatch} from '@haltseal/payments';
 const [origin,matrix,output]=process.argv.slice(2);
 const {cases}=JSON.parse(await fs.readFile(matrix,'utf8'));
 const records=[];
