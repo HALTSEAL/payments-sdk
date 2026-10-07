@@ -1,7 +1,8 @@
 # HALTSEAL Payments SDK for Python
 
-Dependency-free client for Python 3.12+. Registry beta candidate `0.2.0rc2`; PyPI publication is pending.
-After publication, in a fresh virtual environment:
+Dependency-free client for Python 3.12+. Evaluation prerelease `0.2.0rc2` is
+published on [PyPI](https://pypi.org/project/haltseal-payments/0.2.0rc2/).
+In a fresh virtual environment:
 
 ```sh
 python -m pip install haltseal-payments==0.2.0rc2
@@ -28,7 +29,8 @@ with Client("https://your-evaluation-origin.example", "your-evaluation-key") as 
 ```
 
 This snippet requires a configured evaluator. To run immediately without one,
-use `python3 tools/quickstart.py` at the repository root.
+run `python -m haltseal_payments_sdk.sandbox --output python-sandbox.json` after
+installation. No Node runtime or source checkout is needed for that exercise.
 
 Creation uncertainty retains `operation_id` and `LOOKUP_OPERATION`.
 Resume/cancel/recover uncertainty retains `attempt_id` and `LOOKUP_ATTEMPT`.

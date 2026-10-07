@@ -34,11 +34,13 @@ build-provenance attestation, attached as `build-attestation.jsonl`. Existing ta
 repeat automatic events skip an already published version, while an explicit
 manual overwrite request fails. Registry publication is a separate step.
 
-## Registry beta candidate
+## RC2 distribution
 
 `0.2.0-rc.2` adds canonical distribution names, explicit single-language hosted
-fixture demos and a manual registry workflow. Public registry availability is
-pending owner setup and verified uploads. The workflow rebuilds an existing
+fixture demos and a manual registry workflow. Python is published on PyPI with
+registry-download byte verification and an installed hosted recovery run.
+JavaScript uses the verified GitHub release file until npm publication is complete.
+The workflow rebuilds an existing
 GitHub prerelease and compares its exact downloaded bytes before upload. Registry
 metadata and hosted example success do not qualify payment authority or production.
 See [registry launch](registry-release.md) for the account-owner setup and migration.
