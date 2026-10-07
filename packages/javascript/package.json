@@ -1,0 +1,31 @@
+{
+  "name": "@haltseal/payments-evaluation",
+  "version": "0.1.0-rc.4",
+  "type": "module",
+  "exports": {
+    ".": {
+      "types": "./index.d.ts",
+      "import": "./index.mjs"
+    }
+  },
+  "files": [
+    "index.mjs",
+    "index.d.ts",
+    "README.md",
+    "LICENSE"
+  ],
+  "engines": {
+    "node": ">=22"
+  },
+  "license": "MIT",
+  "description": "Obligation-bound HALTSEAL payment API client for local evaluation",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/HALTSEAL/payments-sdk.git",
+    "directory": "packages/javascript"
+  },
+  "homepage": "https://haltseal.com/docs/payments/",
+  "bugs": {
+    "url": "https://github.com/HALTSEAL/payments-sdk/issues"
+  }
+}

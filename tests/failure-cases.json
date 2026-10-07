@@ -1,0 +1,248 @@
+[
+  {
+    "id": "create-http-408",
+    "kind": "create",
+    "status": 408,
+    "body": {
+      "error": "FIXTURE_UNAVAILABLE"
+    },
+    "expected_error": "UncertainDispatch",
+    "action": "LOOKUP_OPERATION"
+  },
+  {
+    "id": "create-http-429",
+    "kind": "create",
+    "status": 429,
+    "body": {
+      "error": "FIXTURE_UNAVAILABLE"
+    },
+    "expected_error": "UncertainDispatch",
+    "action": "LOOKUP_OPERATION"
+  },
+  {
+    "id": "create-http-500",
+    "kind": "create",
+    "status": 500,
+    "body": {
+      "error": "FIXTURE_UNAVAILABLE"
+    },
+    "expected_error": "UncertainDispatch",
+    "action": "LOOKUP_OPERATION"
+  },
+  {
+    "id": "create-http-503",
+    "kind": "create",
+    "status": 503,
+    "body": {
+      "error": "FIXTURE_UNAVAILABLE"
+    },
+    "expected_error": "UncertainDispatch",
+    "action": "LOOKUP_OPERATION"
+  },
+  {
+    "id": "create-redirect-302",
+    "kind": "create",
+    "status": 302,
+    "body": {
+      "error": "FIXTURE_UNAVAILABLE"
+    },
+    "expected_error": "UncertainDispatch",
+    "action": "LOOKUP_OPERATION",
+    "headers": {
+      "Location": "/__test__/redirect-target"
+    }
+  },
+  {
+    "id": "create-redirect-307",
+    "kind": "create",
+    "status": 307,
+    "body": {
+      "error": "FIXTURE_UNAVAILABLE"
+    },
+    "expected_error": "UncertainDispatch",
+    "action": "LOOKUP_OPERATION",
+    "headers": {
+      "Location": "/__test__/redirect-target"
+    }
+  },
+  {
+    "id": "create-invalid-json",
+    "kind": "create",
+    "status": 200,
+    "body": {
+      "error": "FIXTURE_UNAVAILABLE"
+    },
+    "expected_error": "UncertainDispatch",
+    "action": "LOOKUP_OPERATION",
+    "raw": "{"
+  },
+  {
+    "id": "create-duplicate-key",
+    "kind": "create",
+    "status": 200,
+    "body": {
+      "error": "FIXTURE_UNAVAILABLE"
+    },
+    "expected_error": "UncertainDispatch",
+    "action": "LOOKUP_OPERATION",
+    "raw": "{\"mode\":\"local-evaluation\",\"production\":\"NO_GO\",\"decision\":\"HOLD\",\"decision\":\"REFUSE\"}"
+  },
+  {
+    "id": "create-wrong-content-type",
+    "kind": "create",
+    "status": 200,
+    "body": {
+      "mode": "local-evaluation",
+      "production": "NO_GO",
+      "decision": "HOLD"
+    },
+    "expected_error": "UncertainDispatch",
+    "action": "LOOKUP_OPERATION",
+    "headers": {
+      "Content-Type": "text/html"
+    }
+  },
+  {
+    "id": "create-missing-boundary",
+    "kind": "create",
+    "status": 200,
+    "body": {
+      "decision": "HOLD"
+    },
+    "expected_error": "UncertainDispatch",
+    "action": "LOOKUP_OPERATION"
+  },
+  {
+    "id": "create-wrong-obligation",
+    "kind": "create",
+    "status": 200,
+    "body": {
+      "mode": "local-evaluation",
+      "production": "NO_GO",
+      "decision": "HOLD",
+      "obligation_id": "other-obligation"
+    },
+    "expected_error": "UncertainDispatch",
+    "action": "LOOKUP_OPERATION"
+  },
+  {
+    "id": "create-unknown-decision",
+    "kind": "create",
+    "status": 200,
+    "body": {
+      "mode": "local-evaluation",
+      "production": "NO_GO",
+      "decision": "SEND_AGAIN"
+    },
+    "expected_error": "UncertainDispatch",
+    "action": "LOOKUP_OPERATION"
+  },
+  {
+    "id": "create-oversized-reply",
+    "kind": "create",
+    "status": 200,
+    "body": {
+      "error": "FIXTURE_UNAVAILABLE"
+    },
+    "expected_error": "UncertainDispatch",
+    "action": "LOOKUP_OPERATION",
+    "oversize": true
+  },
+  {
+    "id": "create-connection-lost",
+    "kind": "create",
+    "status": 200,
+    "body": {
+      "error": "FIXTURE_UNAVAILABLE"
+    },
+    "expected_error": "UncertainDispatch",
+    "action": "LOOKUP_OPERATION",
+    "disconnect": true
+  },
+  {
+    "id": "create-deadline",
+    "kind": "create",
+    "status": 200,
+    "body": {
+      "error": "FIXTURE_UNAVAILABLE"
+    },
+    "expected_error": "UncertainDispatch",
+    "action": "LOOKUP_OPERATION",
+    "delay_ms": 400,
+    "timeout_ms": 120
+  },
+  {
+    "id": "lookup-not-found",
+    "kind": "lookup",
+    "status": 404,
+    "body": {
+      "error": "OPERATION_NOT_FOUND"
+    },
+    "expected_error": "APIError",
+    "action": "REPEAT_READ"
+  },
+  {
+    "id": "lookup-redispatch-claim",
+    "kind": "lookup",
+    "status": 200,
+    "body": {
+      "mode": "local-evaluation",
+      "production": "NO_GO",
+      "decision": "HOLD",
+      "historical_decision": true,
+      "redispatched": true
+    },
+    "expected_error": "TransportError",
+    "action": "REPEAT_READ"
+  },
+  {
+    "id": "attempt-read-unavailable",
+    "kind": "attempt",
+    "status": 503,
+    "body": {
+      "error": "FIXTURE_UNAVAILABLE"
+    },
+    "expected_error": "TransportError",
+    "action": "REPEAT_READ"
+  },
+  {
+    "id": "recover-reply-unavailable",
+    "kind": "recover",
+    "status": 503,
+    "body": {
+      "error": "FIXTURE_UNAVAILABLE"
+    },
+    "expected_error": "UncertainDispatch",
+    "action": "LOOKUP_ATTEMPT"
+  },
+  {
+    "id": "resume-reply-unavailable",
+    "kind": "resume",
+    "status": 503,
+    "body": {
+      "error": "FIXTURE_UNAVAILABLE"
+    },
+    "expected_error": "UncertainDispatch",
+    "action": "LOOKUP_ATTEMPT"
+  },
+  {
+    "id": "cancel-reply-unavailable",
+    "kind": "cancel",
+    "status": 503,
+    "body": {
+      "error": "FIXTURE_UNAVAILABLE"
+    },
+    "expected_error": "UncertainDispatch",
+    "action": "LOOKUP_ATTEMPT"
+  },
+  {
+    "id": "source-reply-unavailable",
+    "kind": "source",
+    "status": 503,
+    "body": {
+      "error": "FIXTURE_UNAVAILABLE"
+    },
+    "expected_error": "UncertainDispatch",
+    "action": "REVIEW_SOURCE"
+  }
+]

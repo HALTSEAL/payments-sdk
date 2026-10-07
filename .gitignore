@@ -1,0 +1,11 @@
+__pycache__/
+*.pyc
+*.egg-info/
+.venv/
+node_modules/
+dist/
+build/
+.sandbox-state/
+*-synthetic-result.json
+verification.json
+.DS_Store

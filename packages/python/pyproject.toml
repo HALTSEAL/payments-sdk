@@ -1,0 +1,25 @@
+[build-system]
+requires = ["setuptools>=78"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "haltseal-payments-evaluation"
+version = "0.1.0rc4"
+description = "HALTSEAL payment API client for local evaluation"
+requires-python = ">=3.12"
+license = "MIT"
+license-files = ["LICENSE"]
+readme = "README.md"
+dependencies = []
+
+[project.urls]
+Homepage = "https://haltseal.com/developers/payments/"
+Source = "https://github.com/HALTSEAL/payments-sdk"
+Documentation = "https://haltseal.com/docs/payments/"
+Issues = "https://github.com/HALTSEAL/payments-sdk/issues"
+
+[tool.setuptools.packages.find]
+include = ["haltseal_payments_sdk"]
+
+[tool.setuptools.package-data]
+haltseal_payments_sdk = ["py.typed"]

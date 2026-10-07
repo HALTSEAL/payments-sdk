@@ -1,0 +1,25 @@
+{
+  "schema": "haltseal.sdk-public-baseline.v1",
+  "client_version": "0.1.0-rc.4",
+  "files": {
+    "haltseal-payments-evaluation-0.1.0-rc.4.tgz": {
+      "sha256": "86ca63a66784a5557a5708669bf7f1914f1cdcb96310af2b9e03d5dfc0a6e2e5",
+      "url": "https://haltseal.com/developers/payments/releases/0.1.0-rc.4/haltseal-payments-evaluation-0.1.0-rc.4.tgz"
+    },
+    "haltseal_payments_evaluation-0.1.0rc4-py3-none-any.whl": {
+      "sha256": "e41afe43dc87c663c6fc74570bc845a6eb047268ec8eef485a5403a87a3c824c",
+      "url": "https://haltseal.com/developers/payments/releases/0.1.0-rc.4/haltseal_payments_evaluation-0.1.0rc4-py3-none-any.whl"
+    }
+  },
+  "fixture_source": {
+    "url": "https://haltseal.com/developers/payments/sandbox/1.0.0/HALTSEAL_SDK_Sandbox_1.0.0.zip",
+    "sha256": "eca76eecdb19e967bfc9cf3c74168be8f205cfc35903ef6dac548c621614d9d3",
+    "files": {
+      "LICENSE": "3c1bbfea1572d550ff162d275795268563e3c0bbc3ef5966901bd2c46bdfc6ac",
+      "fixture.mjs": "49554a810090aa6ca351ca4169f8157935139c9b5271c4a2b272528d4881631d",
+      "server.mjs": "198219ba5336aac48db3a4ada2dbded3e0dfe8518a51ca757f2c349162b88cf4",
+      "worker.mjs": "9cec7417c795ed184672129b4d255e8dbf18f7fc2cb1eefdecbeb0ec92993df8"
+    }
+  },
+  "scope": "Public MIT client runtime/types and synthetic fixtures. No private service history."
+}

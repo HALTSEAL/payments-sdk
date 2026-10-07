@@ -1,0 +1,8 @@
+blank_issues_enabled: true
+contact_links:
+  - name: Security report
+    url: https://haltseal.com/responsible-disclosure/
+    about: Report privately. Do not post credentials or customer records.
+  - name: Workflow pilot
+    url: https://haltseal.com/pricing/#workflow
+    about: Current scope, price and readiness conditions.
