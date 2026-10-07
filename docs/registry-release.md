@@ -1,14 +1,16 @@
 # Registry beta launch
 
-Release files: Python `haltseal-payments==0.2.0rc2`, npm
-`@haltseal/payments@0.2.0-rc.2`. **Registry publication is pending.** The reviewed
-files are available in the GitHub prerelease. Registry permissions and npm scope
-ownership still need to be confirmed by the account owner before publication.
+Python `haltseal-payments==0.2.0rc2` is published on
+[PyPI](https://pypi.org/project/haltseal-payments/0.2.0rc2/).
+JavaScript `@haltseal/payments` version `0.2.0-rc.2` is available from the
+[GitHub prerelease](https://github.com/HALTSEAL/payments-sdk/releases/tag/v0.2.0-rc.2).
+**npm publication is pending.** npm scope ownership still needs to be confirmed
+by the account owner before its first registry upload.
 
 ## Verified release checkpoint
 
-Checked on 2026-10-07. These results identify the reviewed RC2 release and do not
-establish registry availability.
+Checked on 2026-10-07. Python registry availability and the GitHub release files
+are verified separately; no npm registry availability is claimed.
 
 | Gate | Result and evidence |
 | --- | --- |
@@ -19,15 +21,36 @@ establish registry availability.
 | Clean release-file installs | Installed Python and Node recovery examples each reproduced six steps, two synthetic dispatches and zero original-lookup redispatches |
 | Registry preflight | [Exact-tag rebuild and release-download verification passed](https://github.com/HALTSEAL/payments-sdk/actions/runs/37628225741) with publication disabled |
 | GitHub publishing environments | `pypi` and `npm` created with tag-only `v*-rc.*` deployment rules; the workflow also requires the exact released tag in main history |
-| Actual PyPI publication | [Attempt blocked](https://github.com/HALTSEAL/payments-sdk/actions/runs/37629483057): `invalid-publisher`, a valid OIDC token with no matching Trusted Publisher |
+| Actual PyPI publication | [Attempt 2 passed](https://github.com/HALTSEAL/payments-sdk/actions/runs/37629483057/attempts/2) after the owner registered the matching Trusted Publisher; the release wheel was uploaded with its attestation |
 | npm ownership and publication | `@haltseal` scope permission remains unverified; no authenticated initial npm upload was completed |
-| Registry-origin installation | Pending: both pinned registry version endpoints returned HTTP 404 at the checkpoint |
+| Python registry-origin installation | The workflow downloaded the PyPI wheel, matched it byte for byte to the GitHub release, installed it in a fresh virtual environment and reproduced all six hosted fixture steps; two synthetic dispatches, zero original-lookup redispatches |
+| JavaScript installation | Verified GitHub release tarball; use the pinned file URL below until an npm upload and registry-origin verification are complete |
 
-The clean-install results above use downloaded GitHub release files. The registry
-download hash checks and registry-origin recovery runs remain pending. Configure
-the PyPI publisher with the exact values below, then rerun only the failed PyPI
-job. Complete npm's authenticated first upload separately before configuring its
-Trusted Publisher. Keep the RC2 tag and release assets unchanged.
+The first PyPI attempt was blocked by `invalid-publisher`; the successful second
+attempt supersedes that checkpoint. Keep the RC2 tag and release assets unchanged,
+and do not upload the already published PyPI version again. Complete npm's first
+authenticated upload separately before configuring its Trusted Publisher.
+
+## Current installation paths
+
+Python 3.12+, in a fresh virtual environment:
+
+```sh
+python -m pip install haltseal-payments==0.2.0rc2
+python -m haltseal_payments_sdk.sandbox --output python-sandbox.json
+```
+
+Node 22+, in your project:
+
+```sh
+npm install --ignore-scripts --no-audit --no-fund \
+  https://github.com/HALTSEAL/payments-sdk/releases/download/v0.2.0-rc.2/haltseal-payments-0.2.0-rc.2.tgz
+npx --no-install haltseal-payments-demo --output javascript-sandbox.json
+```
+
+The JavaScript import name remains `@haltseal/payments`. Installing a GitHub
+tarball with npm does not mean that the package is published in the npm registry.
+Both demos use fixed synthetic HTTP fixtures and only their own language runtime.
 
 ## What is ready in the repository
 
@@ -40,11 +63,12 @@ Trusted Publisher. Keep the RC2 tag and release assets unchanged.
 Only MIT clients and public fixtures are distributed. No private kernel,
 provider adapters, issuer keys or customer records are added.
 
-## Owner setup: PyPI
+## Registered PyPI publisher
 
-Use a PyPI account with verified email and 2FA. A paid organization is not required
-for this public project. Open [Publishing](https://pypi.org/manage/account/publishing/)
-and add a pending GitHub publisher with these values:
+The owner registered this publisher and the first upload created the project.
+Maintain it under the existing project's
+[Publishing settings](https://pypi.org/manage/project/haltseal-payments/settings/publishing/)
+with these exact values:
 
 | Field | Value |
 | --- | --- |
@@ -54,9 +78,9 @@ and add a pending GitHub publisher with these values:
 | Workflow filename | `registry.yml` |
 | Environment | `pypi` |
 
-A pending publisher creates the project on first upload; it does not reserve the
-name. Confirm name eligibility before announcing it. No PyPI token belongs in
-this repository, chat or workflow.
+No new pending publisher is needed for this existing project. Keep the publishing
+account's email verified and 2FA enabled. No PyPI token belongs in this repository,
+chat or workflow.
 
 ## Owner setup: npm
 
@@ -94,7 +118,7 @@ are not validated by a successful publish within two days.
 
 ## GitHub environments
 
-Create `pypi` and `npm` environments. Align their permitted deployment refs with
+The `pypi` and `npm` environments exist. Keep their permitted deployment refs aligned with
 reviewed release tags. Configure both registry publishers with the matching
 workflow filename and environment. Authentication config belongs to the account
 owner; the SDK consumers never need publisher accounts.
@@ -106,21 +130,20 @@ owner; the SDK consumers never need publisher accounts.
 2. Run `registry.yml` **from that exact tag**, with its matching `tag` input and
    `publish=false`. The tag must be in main history. This verifies OIDC provenance's
    source commit, checks clients/types, rebuilds and compares the GitHub downloads.
-3. After registry configuration, run the same workflow from the same tag with
-   `publish=true`. Select `pypi` after a manual npm bootstrap, or `both` when both
-   publishers already exist. Never republish the bootstrapped npm version.
-4. Check the fresh registry downloads against the release bytes and run both
-   hosted exercises. Only then label the website commands as available.
+3. For a new version, publish only to registries that have not received that
+   version. Set `publish=true` after the matching publisher is configured.
+   Never republish the bootstrapped npm version or the existing RC2 PyPI version.
+4. Check each fresh registry download against its release bytes and run its
+   installed hosted exercise. Advertise each registry independently when verified.
 
 Example using an authenticated GitHub CLI:
 
 ```sh
 gh workflow run registry.yml --ref v0.2.0-rc.2 -f tag=v0.2.0-rc.2 -f registry=both -f publish=false
-# After publisher setup; choose the registry that has not already received this version:
-gh workflow run registry.yml --ref v0.2.0-rc.2 -f tag=v0.2.0-rc.2 -f registry=pypi -f publish=true
+# RC2 is already on PyPI. This command is verification only; do not republish it.
 ```
 
-If one upload succeeds and the other fails, keep the published version. Recover
+For a future release, if one upload succeeds and the other fails, keep the published version. Recover
 by selecting only the missing registry. An unavailable fixture response pauses
 the exercise and does not authorize a financial retry or an automatic new session.
 

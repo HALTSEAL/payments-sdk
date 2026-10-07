@@ -1,17 +1,23 @@
 # HALTSEAL Payments SDK for JavaScript
 
 Dependency-free ESM client for Node 22+, with TypeScript declarations.
-Registry beta candidate `0.2.0-rc.2`; npm publication is pending.
-After publication, in your project:
+Evaluation prerelease `0.2.0-rc.2` is available from the
+[GitHub release](https://github.com/HALTSEAL/payments-sdk/releases/tag/v0.2.0-rc.2).
+**npm publication is pending.** Install the pinned release file in your project:
 
 ```sh
-npm install @haltseal/payments@0.2.0-rc.2
+npm install --ignore-scripts --no-audit --no-fund \
+  https://github.com/HALTSEAL/payments-sdk/releases/download/v0.2.0-rc.2/haltseal-payments-0.2.0-rc.2.tgz
 npx --no-install haltseal-payments-demo --output javascript-sandbox.json
 ```
 
 The explicit demo creates a short-lived synthetic session at `https://haltseal.com`.
 Only Node is needed; the output omits its key and never overwrites an existing
-file. Offline tarballs remain available through versioned GitHub releases.
+file. The installed package and import name are `@haltseal/payments`; an npm
+registry install by package name is not available yet. Release checksums and
+build provenance are available on GitHub. Offline installation uses the same
+downloaded tarball with `npm install --offline --ignore-scripts --no-audit
+--no-fund ./haltseal-payments-0.2.0-rc.2.tgz`.
 
 ```js
 import {Client, UncertainDispatch} from '@haltseal/payments';
@@ -35,7 +41,8 @@ try {
 ```
 
 This snippet requires a configured evaluator. Run immediately without one
-using `python3 tools/quickstart.py` at the repository root.
+using `npx --no-install haltseal-payments-demo --output javascript-sandbox.json`
+after installation. No Python runtime or source checkout is needed for that exercise.
 
 Creation uncertainty retains `operationId` and `LOOKUP_OPERATION`.
 Resume/cancel/recover uncertainty retains `attemptId` and `LOOKUP_ATTEMPT`.
