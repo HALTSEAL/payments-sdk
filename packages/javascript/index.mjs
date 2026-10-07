@@ -3,7 +3,6 @@ import {isIP} from 'node:net';
 
 const MAX_RESPONSE = 1_048_576;
 const MAX_REQUEST = 16_384;
-// $ also matches before a trailing newline; assert the absolute end.
 const ID = /^[A-Za-z0-9][A-Za-z0-9_.:-]{0,127}(?![\s\S])/;
 const STATES = new Set(['PREPARED','EXPOSED','PENDING','IN_TRANSIT','PAID','CLOSED','FAILED_REVIEW','NEVER_DISPATCHED']);
 const DECISIONS = new Set(['ACCEPT','HOLD','REFUSE','REGISTERED','REVOKED','OBSERVED']);
@@ -58,38 +57,84 @@ function strictJSON(raw) {
     return value;
   });
 }
+function safeInteger(value, minimum=0) {
+  return Number.isSafeInteger(value) && value>=minimum;
+}
+function validAttempt(data, obligationId) {
+  if(!object(data)) return false;
+  for(const key of ['attempt_id','obligation_id','product_instance_id'])
+    if(typeof data[key]!=='string' || !ID.test(data[key])) return false;
+  if(obligationId!==undefined && data.obligation_id!==obligationId) return false;
+  if(!STATES.has(data.state) || !['A','B','C'].includes(data.route) ||
+    data.execution_outcome!==(['PAID','CLOSED'].includes(data.state)?data.state:'UNKNOWN')) return false;
+  if(!safeInteger(data.amount_minor,1) || !safeInteger(data.approval_revision,1)) return false;
+  for(const key of ['ever_paid','dispatch_intent_recorded']) if(typeof data[key]!=='boolean') return false;
+  if(data.state==='PAID' && !data.ever_paid || data.state==='CLOSED' && data.ever_paid) return false;
+  for(const key of ['original_payment_id','source_evidence_digest','source_status','closure_profile'])
+    if(!(key in data)) return false;
+  if(data.original_payment_id!==null && !(typeof data.original_payment_id==='string' && ID.test(data.original_payment_id) ||
+    safeInteger(data.original_payment_id,1))) return false;
+  if(data.source_evidence_digest!==null && (typeof data.source_evidence_digest!=='string' ||
+    !/^[a-f0-9]{64}(?![\s\S])/.test(data.source_evidence_digest))) return false;
+  for(const key of ['source_status','closure_profile'])
+    if(data[key]!==null && (typeof data[key]!=='string' || !data[key])) return false;
+  return true;
+}
 function validResult(data, ctx) {
   if(!object(data) || data.mode!=='local-evaluation' || data.production!=='NO_GO') return false;
-  for(const key of ['attempt_id','obligation_id']) if(key in data && (typeof data[key]!=='string' || !ID.test(data[key]))) return false;
-  if(ctx.obligation_id && 'obligation_id' in data && data.obligation_id!==ctx.obligation_id) return false;
-  if(ctx.attempt_id && 'attempt_id' in data && data.attempt_id!==ctx.attempt_id) return false;
-  for(const key of ['historical_decision','redispatched','ever_paid','dispatch_intent_recorded'])
-    if(key in data && typeof data[key]!=='boolean') return false;
-  if(['create_attempt','lookup_operation'].includes(ctx.request_kind) && data.historical_decision===true && data.redispatched!==false) return false;
-  for(const key of ['amount_minor','maximum_source_debit_minor','available_principal_minor','approval_revision'])
-    if(key in data && (!Number.isSafeInteger(data[key]) || data[key]<0 || key==='approval_revision' && data[key]<1)) return false;
+  for(const key of ['attempt_id','obligation_id','operation_id']) if(key in data && (typeof data[key]!=='string' || !ID.test(data[key]))) return false;
   if('decision' in data && !DECISIONS.has(data.decision)) return false;
   if('state' in data && !STATES.has(data.state)) return false;
   if('execution_outcome' in data && !['UNKNOWN','PREPARED_BLOCKED'].includes(data.execution_outcome) && !STATES.has(data.execution_outcome)) return false;
-  if('reason' in data && typeof data.reason!=='string') return false;
-  const validAttempt=a=>object(a) && typeof a.attempt_id==='string' && ID.test(a.attempt_id) &&
-    typeof a.obligation_id==='string' && ID.test(a.obligation_id) &&
-    (!ctx.obligation_id || a.obligation_id===ctx.obligation_id) && STATES.has(a.state) &&
-    validResult({...a,mode:'local-evaluation',production:'NO_GO'},
-      {...ctx,request_kind:'attempt',attempt_id:a.attempt_id,obligation_id:null});
+  if(('decision' in data || 'reason' in data) && typeof data.reason!=='string') return false;
+  for(const key of ['historical_decision','redispatched','ever_paid','dispatch_intent_recorded']) if(key in data && typeof data[key]!=='boolean') return false;
+  for(const [key,minimum] of [['amount_minor',1],['approval_revision',1],['available_principal_minor',0],['maximum_source_debit_minor',0]])
+    if(key in data && !safeInteger(data[key],minimum)) return false;
   switch(ctx.request_kind) {
     case 'approve_source': return ['REGISTERED','REVOKED','HOLD','REFUSE'].includes(data.decision) &&
       (!['REGISTERED','REVOKED'].includes(data.decision) || typeof data.obligation_id==='string');
-    case 'obligation': return data.obligation_id===ctx.obligation_id && Array.isArray(data.attempts) && data.attempts.every(validAttempt);
-    case 'attempt': return data.attempt_id===ctx.attempt_id && STATES.has(data.state);
-    case 'lookup_operation': return data.historical_decision===true && data.redispatched===false &&
-      ['ACCEPT','HOLD','REFUSE'].includes(data.decision) && (data.decision!=='ACCEPT' || 'attempt_id' in data) && (!data.attempt_id ||
-      validAttempt(data.attempt) && data.attempt.attempt_id===data.attempt_id);
-    case 'create_attempt': return ['ACCEPT','HOLD','REFUSE'].includes(data.decision) &&
+    case 'obligation': {
+      if(data.obligation_id!==ctx.obligation_id || !Array.isArray(data.attempts) ||
+        !safeInteger(data.amount_minor,1) || !safeInteger(data.available_principal_minor) ||
+        data.available_principal_minor>data.amount_minor || !safeInteger(data.approval_revision,1) ||
+        !['APPROVED','REVOKED'].includes(data.approval_status) || typeof data.approval_expires_at_ns!=='string' ||
+        !/^[0-9]+(?![\s\S])/.test(data.approval_expires_at_ns)) return false;
+      const seen=new Set();
+      for(const attempt of data.attempts) {
+        if(!validAttempt(attempt,ctx.obligation_id) || seen.has(attempt.attempt_id) ||
+          attempt.amount_minor!==data.amount_minor || attempt.approval_revision>data.approval_revision) return false;
+        seen.add(attempt.attempt_id);
+      }
+      return true;
+    }
+    case 'attempt': return data.attempt_id===ctx.attempt_id && validAttempt(data);
+    case 'lookup_operation': {
+      if(ctx.obligation_id && data.obligation_id!==ctx.obligation_id) return false;
+      // Bare blocked decisions may omit the obligation; accepted/record-bearing
+      // responses and explicitly bound lookups must retain it.
+      if((data.decision==='ACCEPT' || 'attempt_id' in data || 'attempt' in data) && typeof data.obligation_id!=='string') return false;
+      if(data.operation_id!==ctx.operation_id || data.historical_decision!==true || data.redispatched!==false ||
+        !['ACCEPT','HOLD','REFUSE'].includes(data.decision)) return false;
+      if('attempt_id' in data) {
+        if(!validAttempt(data.attempt) || data.attempt.attempt_id!==data.attempt_id) return false;
+        if('obligation_id' in data && data.attempt.obligation_id!==data.obligation_id) return false;
+      } else if('attempt' in data) return false;
+      return data.decision!=='ACCEPT' || 'attempt_id' in data && 'execution_outcome' in data;
+    }
+    case 'create_attempt': return (!('attempt' in data) || validAttempt(data.attempt,ctx.obligation_id) && data.attempt.attempt_id===data.attempt_id) &&
+      data.operation_id===ctx.operation_id && data.obligation_id===ctx.obligation_id &&
+      !(data.historical_decision===true && data.redispatched!==false) && data.redispatched!==true &&
+      ['ACCEPT','HOLD','REFUSE'].includes(data.decision) &&
       (data.decision!=='ACCEPT' || typeof data.attempt_id==='string' && 'execution_outcome' in data);
-    default: return ['recover','cancel','resume'].includes(ctx.request_kind) &&
-      ['HOLD','REFUSE','OBSERVED'].includes(data.decision) &&
-      (data.decision!=='OBSERVED' || data.attempt_id===ctx.attempt_id && STATES.has(data.state));
+    default: {
+      // The kernel returns a status summary; expanded records must be complete.
+      const fields=['obligation_id','route','product_instance_id','execution_outcome','amount_minor','approval_revision',
+        'ever_paid','dispatch_intent_recorded','original_payment_id','source_evidence_digest','source_status','closure_profile'];
+      const observed=STATES.has(data.state) && (!fields.some(key=>key in data) || validAttempt(data));
+      return ['recover','cancel','resume'].includes(ctx.request_kind) &&
+        ['HOLD','REFUSE','OBSERVED'].includes(data.decision) && data.attempt_id===ctx.attempt_id &&
+        (data.decision!=='OBSERVED' || observed);
+    }
   }
 }
 function withAbort(promise, signal) {
@@ -106,7 +151,7 @@ function cancelBody(body) {
 }
 async function boundedBody(response, signal) {
   const length=response.headers.get('content-length');
-  if(length!==null && (!/^[0-9]+$/.test(length) || Number(length)>MAX_RESPONSE)) throw new Error('Invalid or oversized response length');
+  if(length!==null && (!/^[0-9]+(?![\s\S])/.test(length) || Number(length)>MAX_RESPONSE)) throw new Error('Invalid or oversized response length');
   if(!response.body || typeof response.body.getReader!=='function') throw new Error('Readable response body required');
   const reader=response.body.getReader(), chunks=[]; let size=0;
   try {
@@ -160,6 +205,7 @@ export class Client {
     const controller=new AbortController();
     const timer=setTimeout(()=>controller.abort(),this.timeoutMs);
     const started=performance.now(); let status=null, requestId=null, resultKind='unknown', response;
+    const deadline=started+this.timeoutMs;
     const failure=code=>new (method==='POST'?UncertainDispatch:TransportError)(code,ctx,status,requestId);
     try {
       response=await withAbort(this.fetchImpl(this.baseUrl+path,{method,redirect:'manual',signal:controller.signal,
@@ -167,7 +213,7 @@ export class Client {
         body:serialized}),controller.signal);
       status=response.status;
       const trace=response.headers.get('x-request-id');
-      requestId=trace && /^[A-Za-z0-9_.:-]{1,128}$/.test(trace)?trace:null;
+      requestId=trace && /^[A-Za-z0-9_.:-]{1,128}(?![\s\S])/.test(trace)?trace:null;
       if(response.redirected || (response.url && response.url!==this.baseUrl+path) || status>=300 && status<400) {
         if(method==='POST') throw failure('REDIRECT_REFUSED');
         throw new APIError('REDIRECT_REFUSED',status,ctx,requestId);
@@ -175,13 +221,16 @@ export class Client {
       if(status>=500 || [408,429].includes(status)) throw failure('HTTP_'+status);
       if(response.headers.get('content-type')?.split(';',1)[0].trim().toLowerCase()!=='application/json') throw failure('INVALID_CONTENT_TYPE');
       const data=strictJSON(await boundedBody(response,controller.signal));
+      if(controller.signal.aborted || performance.now()>=deadline) throw failure('DEADLINE_EXCEEDED');
       if(status>=400) {
-        if(!object(data) || typeof data.error!=='string' || !/^[A-Z0-9_]{1,128}$/.test(data.error)) throw failure('INVALID_ERROR_RESPONSE');
+        if(!object(data) || typeof data.error!=='string' || !/^[A-Z0-9_]{1,128}(?![\s\S])/.test(data.error)) throw failure('INVALID_ERROR_RESPONSE');
         throw new APIError(data.error,status,ctx,requestId);
       }
       if(status!==200 || !validResult(data,ctx)) throw failure('INVALID_RESPONSE_CONTRACT');
+      if(controller.signal.aborted || performance.now()>=deadline) throw failure('DEADLINE_EXCEEDED');
       resultKind='response'; return data;
     } catch(error) {
+      if(controller.signal.aborted || performance.now()>=deadline) throw failure('DEADLINE_EXCEEDED');
       if(error instanceof APIError && error.recovery===ctx) { resultKind='api_error'; throw error; }
       if(error instanceof TransportError && error.recovery===ctx) throw error;
       throw failure('TRANSPORT_OR_RESPONSE_UNCERTAIN');
@@ -212,7 +261,11 @@ export class Client {
       {operation_id:operationId,route,approval_revision:approvalRevision},'create_attempt',
       {operation_id:operationId,obligation_id:id,approval_revision:approvalRevision});
   }
-  lookupOperation(id) { identifier(id); return this.request('GET','/v1/payment-attempts/lookup?operation_id='+encodeURIComponent(id),undefined,'lookup_operation',{operation_id:id}); }
+  lookupOperation(id,{obligationId}={}) {
+    identifier(id); if(obligationId!==undefined) identifier(obligationId);
+    return this.request('GET','/v1/payment-attempts/lookup?operation_id='+encodeURIComponent(id),undefined,'lookup_operation',
+      {operation_id:id,obligation_id:obligationId});
+  }
   attempt(id) { identifier(id); return this.request('GET','/v1/payment-attempts/'+encodeURIComponent(id),undefined,'attempt',{attempt_id:id}); }
   recover(id) { return this.action('recover',id); }
   cancel(id) { return this.action('cancel',id); }

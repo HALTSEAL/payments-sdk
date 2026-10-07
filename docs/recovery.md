@@ -14,6 +14,26 @@ The client never performs the next action automatically. Keep unresolved work
 blocked across restarts. Lookup `404` does not establish that the original
 never executed or that its principal is available.
 
+## Bind both original identities
+
+Creation and original lookup require the exact echoed `operation_id`.
+Creation requires its `obligation_id`; nested attempt and outer identities
+must agree. Pass the obligation you retained before dispatch for an additional
+independent lookup check:
+
+```python
+original = client.lookup_operation(error.operation_id, obligation_id=error.obligation_id)
+```
+
+```js
+const original = await client.lookupOperation(error.operationId, {obligationId: error.obligationId});
+```
+
+Attempt reads and nested records require complete typed records. The kernel's
+`OBSERVED` status summary must match the exact attempt and contain a valid state.
+An expanded observation record must be complete. Use `attempt` to read the full
+retained record. Invalid records produce a recovery error, not a usable decision.
+
 ## Errors retain evidence
 
 | Error | Meaning | Response |
@@ -47,6 +67,19 @@ Default clients send once, refuse redirects, limit response size and validate
 the evaluation response shape. Use HTTPS or literal loopback HTTP origins,
 without a path, query or embedded credentials. Keep TLS verification enabled.
 Injected transports must preserve these guarantees and never retry internally.
+
+`timeout` (Python seconds) and `timeoutMs` (Node milliseconds) cover transport,
+body consumption and validation. `DEADLINE_EXCEEDED` retains the same recovery
+context. Deadline expiry does not prove that a server stopped or undo a send.
+Runtime scheduling can delay error delivery; a late successful response is
+not accepted. Event callbacks must return promptly.
+
+Python's default transport connects directly with verified HTTPS and shuts
+down its socket on timeout. Python custom adapters run on bounded SDK workers
+and must support thread-safe use. Uninterruptible DNS/custom work can finish
+later; its worker slot stays occupied until it finishes, with 64 active workers
+per process. Saturation raises local `ValidationError` without sending. A
+caller-supplied adapter owns any proxy/pooling/TLS behavior and resource cleanup.
 
 Signed source imports use original JSON text. Do not normalize signatures or
 rewrite timestamps. `close()` prevents new calls; custom transport owners

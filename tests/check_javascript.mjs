@@ -12,16 +12,21 @@ for (const c of cases) {
   const client = new Client({baseUrl: origin, apiKey: key, timeoutMs: c.timeout_ms ?? 2000,
                              onEvent: event => events.push(event)});
   try {
+    const started = performance.now();
     try {
       if (c.kind === 'create') await client.createAttempt('test-obligation', {operationId: c.id, route: 'A', approvalRevision: 1});
       else if (c.kind === 'lookup') await client.lookupOperation(c.id);
-      else if (c.kind === 'source') await client.approveSource(JSON.stringify({test_case: c.id}));
+      else if (c.kind === 'source') await client.approveSource(c.raw_source ?? JSON.stringify({test_case: c.id}));
       else if (c.kind === 'resume') await client.resume(c.id, {approvalRevision: 1});
       else await client[c.kind](c.id);
       assert.fail('Expected recovery error: ' + c.id);
     } catch (error) {
       assert.ok(error instanceof APIError || error instanceof TransportError, c.id);
       assert.equal(error.constructor.name, c.expected_error, c.id);
+      if (c.expected_code) {
+        assert.equal(error.code, c.expected_code, c.id);
+        assert.ok(performance.now() - started < 800, 'Caller exceeded total deadline');
+      }
       const context = error.recovery;
       assert.equal(context.action, c.action, c.id);
       assert.equal(context.request_may_have_executed, !['lookup', 'attempt'].includes(c.kind));

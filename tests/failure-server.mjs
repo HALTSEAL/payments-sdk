@@ -18,6 +18,27 @@ const server = http.createServer(async (req, res) => {
   if (!c) { res.writeHead(404, {'Content-Type': 'application/json'}); res.end('{"error":"UNKNOWN_TEST_CASE"}'); return; }
   if (c.disconnect) { req.socket.destroy(); return; }
   if (c.delay_ms) await new Promise(resolve => setTimeout(resolve, c.delay_ms));
+  if (c.header_drip) {
+    const data = JSON.stringify(c.body);
+    req.socket.write('HTTP/1.1 200 OK\r\nContent-Type: application/json\r\nContent-Length: ' + Buffer.byteLength(data) + '\r\nX-Slow: ');
+    const timer = setInterval(() => { if (!req.socket.destroyed) req.socket.write('x'); }, 35);
+    req.socket.once('close', () => clearInterval(timer));
+    return;
+  }
+  if (c.body_drip) {
+    const data = Buffer.from(JSON.stringify(c.body));
+    res.writeHead(c.status, {'Content-Type': 'application/json', 'X-Request-ID': 'fixture-' + id,
+      ...(c.chunked ? {} : {'Content-Length': String(data.length)}),
+      ...(c.connection_close ? {'Connection': 'close'} : {})});
+    res.flushHeaders(); let offset = 0;
+    const timer = setInterval(() => {
+      if (res.destroyed) { clearInterval(timer); return; }
+      res.write(data.subarray(offset, offset + 4)); offset += 4;
+      if (offset >= data.length) { clearInterval(timer); res.end(); }
+    }, 35);
+    res.once('close', () => clearInterval(timer));
+    return;
+  }
   res.writeHead(c.status, {'Content-Type': 'application/json', 'X-Request-ID': 'fixture-' + id, ...c.headers});
   res.end(c.oversize ? 'x'.repeat(1_048_577) : c.raw ?? JSON.stringify(c.body));
 });

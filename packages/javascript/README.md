@@ -19,7 +19,7 @@ try {
   } catch (error) {
     if (!(error instanceof UncertainDispatch)) throw error;
     // Lookup failure preserves the hold. It grants no replacement.
-    result = await client.lookupOperation(error.operationId);
+    result = await client.lookupOperation(error.operationId, {obligationId: error.obligationId});
   }
   // Check decision and execution_outcome before any next step.
 } finally { client.close(); }
@@ -40,6 +40,12 @@ nanosecond timestamps with JavaScript numbers. `timeoutMs` bounds fetch and
 body consumption. Responses are limited to 1 MiB; redirects are refused.
 Injected `fetchImpl` must preserve one send, verified TLS and no redirect/retry.
 `onEvent` receives redacted request metadata.
+
+SDK v2 (`0.2.0-rc.1`) verifies echoed operation/obligation IDs and complete
+attempt records. Pass the retained obligation to `lookupOperation` to bind
+the lookup to both identities. Deadline expiry preserves uncertainty even
+when a custom transport finishes later. Event callbacks must return promptly.
+Read the [migration guide](https://github.com/HALTSEAL/payments-sdk/blob/main/docs/migration-v2.md).
 
 [Recovery](https://github.com/HALTSEAL/payments-sdk/blob/main/docs/recovery.md)
 · [API docs](https://haltseal.com/docs/payments/)

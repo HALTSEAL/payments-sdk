@@ -1,12 +1,14 @@
-Official public source and installable packages for HALTSEAL Payment API RC4.
+HALTSEAL Payments SDK v2: exact-original responses and total caller deadlines.
 
-Python and JavaScript runtime/type files match the already public RC4 clients.
-Packaging metadata and documentation are maintained here; use this release's
-SHA256SUMS.txt to verify its downloads.
+`0.2.0-rc.1` requires matching operation/obligation identities, validates complete
+attempt records and preserves recovery context on malformed or late responses.
+Python uses a bounded one-send transport with a total caller deadline. Original
+signed source JSON text is retained in both clients. RC4 archives are preserved;
+the reviewed runtime migration and this release's checksums identify the new code.
 
 Run `python3 tools/quickstart.py` from the source bundle for the synthetic
 original-recovery example in both installed clients. Run `python3 tools/check.py`
-for the shared HTTP failure matrix, recovery-context parity and clean-build
+for shared HTTP faults, response identity/record cases, recovery parity and clean-build
 reproducibility. The attached verification.json records the checks.
 
 Evaluation only. Synthetic fixtures, no real funds, no native-provider or

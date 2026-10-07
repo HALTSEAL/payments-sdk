@@ -1,11 +1,15 @@
 name: Release
 on:
+  push:
+    branches: [main]
+    paths:
+      - packages/python/pyproject.toml
+      - packages/javascript/package.json
   workflow_dispatch:
     inputs:
       tag:
         description: Exact prerelease tag matching both package versions
-        required: true
-        default: v0.1.0-rc.4
+        required: false
 permissions:
   contents: read
 concurrency:
@@ -13,12 +17,15 @@ concurrency:
   cancel-in-progress: false
 jobs:
   release:
+    if: github.ref == 'refs/heads/main'
     runs-on: ubuntu-24.04
     timeout-minutes: 10
     permissions:
       contents: write
+      id-token: write
+      attestations: write
     env:
-      RELEASE_TAG: ${{ inputs.tag }}
+      REQUESTED_TAG: ${{ inputs.tag }}
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
         with:
@@ -30,19 +37,51 @@ jobs:
       - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020
         with:
           node-version: '22'
+      - name: Resolve new immutable version
+        id: version
+        run: |
+          RELEASE_TAG=$(python -c 'import json; print("v" + json.load(open("packages/javascript/package.json"))["version"])')
+          if [ -n "$REQUESTED_TAG" ] && [ "$REQUESTED_TAG" != "$RELEASE_TAG" ]; then
+            echo 'Requested tag does not match the package version.' >&2
+            exit 1
+          fi
+          echo "tag=$RELEASE_TAG" >> "$GITHUB_OUTPUT"
+          if git show-ref --verify --quiet "refs/tags/$RELEASE_TAG"; then
+            if [ "$GITHUB_EVENT_NAME" = workflow_dispatch ]; then
+              echo 'Refusing to overwrite an existing tag.' >&2
+              exit 1
+            fi
+            echo 'publish=false' >> "$GITHUB_OUTPUT"
+          else
+            echo 'publish=true' >> "$GITHUB_OUTPUT"
+          fi
       - name: Check installed clients and release version
+        if: steps.version.outputs.publish == 'true'
+        env:
+          RELEASE_TAG: ${{ steps.version.outputs.tag }}
         run: |
           python tools/check.py --output verification.json
+          python tools/check_types.py
           python tools/build_release.py --output dist --expect-tag "$RELEASE_TAG"
+      - name: Attest the built release artifacts
+        if: steps.version.outputs.publish == 'true'
+        id: provenance
+        uses: actions/attest-build-provenance@977bb373ede98d70efdf65b84cb5f73e068dcc2a
+        with:
+          subject-path: dist/*
       - name: Publish a new evaluation prerelease
+        if: steps.version.outputs.publish == 'true'
         env:
           GH_TOKEN: ${{ github.token }}
+          RELEASE_TAG: ${{ steps.version.outputs.tag }}
+          ATTESTATION_BUNDLE: ${{ steps.provenance.outputs.bundle-path }}
         run: |
           if git show-ref --verify --quiet "refs/tags/$RELEASE_TAG"; then
             echo 'Refusing to overwrite an existing tag.' >&2
             exit 1
           fi
-          gh release create "$RELEASE_TAG" dist/* verification.json \
+          cp "$ATTESTATION_BUNDLE" build-attestation.jsonl
+          gh release create "$RELEASE_TAG" dist/* verification.json build-attestation.jsonl \
             --target "$GITHUB_SHA" --prerelease \
             --title "Payments SDK $RELEASE_TAG" \
             --notes-file docs/release-notes.md

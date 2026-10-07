@@ -244,5 +244,140 @@
     },
     "expected_error": "UncertainDispatch",
     "action": "REVIEW_SOURCE"
+  },
+  {
+    "id": "create-drip-length",
+    "kind": "create",
+    "status": 200,
+    "body": {
+      "mode": "local-evaluation",
+      "production": "NO_GO",
+      "decision": "ACCEPT",
+      "reason": "ADMITTED",
+      "operation_id": "create-drip-length",
+      "obligation_id": "test-obligation",
+      "attempt_id": "test-attempt",
+      "state": "EXPOSED",
+      "execution_outcome": "UNKNOWN"
+    },
+    "expected_error": "UncertainDispatch",
+    "expected_code": "DEADLINE_EXCEEDED",
+    "action": "LOOKUP_OPERATION",
+    "timeout_ms": 120,
+    "body_drip": true
+  },
+  {
+    "id": "create-drip-chunked",
+    "kind": "create",
+    "status": 200,
+    "body": {
+      "mode": "local-evaluation",
+      "production": "NO_GO",
+      "decision": "ACCEPT",
+      "reason": "ADMITTED",
+      "operation_id": "create-drip-chunked",
+      "obligation_id": "test-obligation",
+      "attempt_id": "test-attempt",
+      "state": "EXPOSED",
+      "execution_outcome": "UNKNOWN"
+    },
+    "expected_error": "UncertainDispatch",
+    "expected_code": "DEADLINE_EXCEEDED",
+    "action": "LOOKUP_OPERATION",
+    "timeout_ms": 120,
+    "body_drip": true,
+    "chunked": true
+  },
+  {
+    "id": "create-drip-close",
+    "kind": "create",
+    "status": 200,
+    "body": {
+      "mode": "local-evaluation",
+      "production": "NO_GO",
+      "decision": "ACCEPT",
+      "reason": "ADMITTED",
+      "operation_id": "create-drip-close",
+      "obligation_id": "test-obligation",
+      "attempt_id": "test-attempt",
+      "state": "EXPOSED",
+      "execution_outcome": "UNKNOWN"
+    },
+    "expected_error": "UncertainDispatch",
+    "expected_code": "DEADLINE_EXCEEDED",
+    "action": "LOOKUP_OPERATION",
+    "timeout_ms": 120,
+    "body_drip": true,
+    "connection_close": true
+  },
+  {
+    "id": "attempt-drip-length",
+    "kind": "attempt",
+    "status": 200,
+    "body": {
+      "mode": "local-evaluation",
+      "production": "NO_GO",
+      "attempt_id": "attempt-drip-length",
+      "obligation_id": "test-obligation",
+      "product_instance_id": "test-product",
+      "route": "A",
+      "state": "EXPOSED",
+      "execution_outcome": "UNKNOWN",
+      "amount_minor": 1000,
+      "approval_revision": 1,
+      "ever_paid": false,
+      "dispatch_intent_recorded": true,
+      "original_payment_id": "fixture-original",
+      "source_evidence_digest": null,
+      "source_status": "UNRESOLVED",
+      "closure_profile": null
+    },
+    "expected_error": "TransportError",
+    "expected_code": "DEADLINE_EXCEEDED",
+    "action": "REPEAT_READ",
+    "timeout_ms": 120,
+    "body_drip": true
+  },
+  {
+    "id": "create-header-drip",
+    "kind": "create",
+    "status": 200,
+    "body": {
+      "mode": "local-evaluation",
+      "production": "NO_GO",
+      "decision": "ACCEPT",
+      "reason": "ADMITTED",
+      "operation_id": "create-header-drip",
+      "obligation_id": "test-obligation",
+      "attempt_id": "test-attempt",
+      "state": "EXPOSED",
+      "execution_outcome": "UNKNOWN"
+    },
+    "expected_error": "UncertainDispatch",
+    "expected_code": "DEADLINE_EXCEEDED",
+    "action": "LOOKUP_OPERATION",
+    "timeout_ms": 120,
+    "header_drip": true
+  },
+  {
+    "id": "source-raw-text",
+    "kind": "source",
+    "status": 503,
+    "body": {
+      "error": "FIXTURE_UNAVAILABLE"
+    },
+    "raw_source": " { \"test_case\": \"source-raw-text\", \"issued_at_ns\": 1791376800000000000 } \n",
+    "expected_error": "UncertainDispatch",
+    "action": "REVIEW_SOURCE"
+  },
+  {
+    "id": "create-newline-error",
+    "kind": "create",
+    "status": 400,
+    "body": {
+      "error": "INVALID_REQUEST\n"
+    },
+    "expected_error": "UncertainDispatch",
+    "action": "LOOKUP_OPERATION"
   }
 ]

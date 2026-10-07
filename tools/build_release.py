@@ -45,7 +45,7 @@ def build(output):
     output.mkdir(parents=True, exist_ok=False)
     dist = "haltseal_payments_evaluation-" + project["version"] + ".dist-info"
     files = {"haltseal_payments_sdk/" + name: (ROOT / "packages/python/haltseal_payments_sdk" / name).read_bytes()
-             for name in ["__init__.py", "_client.py", "_types.py", "py.typed"]}
+             for name in ["__init__.py", "_client.py", "_transport.py", "_types.py", "py.typed"]}
     metadata = ("Metadata-Version: 2.4\nName: " + project["name"] + "\nVersion: " + project["version"]
                 + "\nSummary: " + project["description"] + "\nRequires-Python: " + project["requires-python"]
                 + "\nLicense-Expression: MIT\nLicense-File: licenses/LICENSE\n"
@@ -93,7 +93,7 @@ def build(output):
     manifest = {"schema": "haltseal.payments-sdk.release.v1", "tag": "v" + js["version"],
                 "python_version": project["version"], "javascript_version": js["version"],
                 "production": "NO_GO", "scope": "Evaluation clients and synthetic HTTP fixtures only",
-                "client_baseline": provenance["files"], "files": dict(hashes),
+                "client_baseline": provenance["files"], "runtime_migration": provenance["runtime_migration"], "files": dict(hashes),
                 "source_files": {name: hashlib.sha256((ROOT / name).read_bytes()).hexdigest() for name in allowlist}}
     (output / "manifest.json").write_text(json.dumps(manifest, indent=2, sort_keys=True) + "\n")
     hashes["manifest.json"] = hashlib.sha256((output / "manifest.json").read_bytes()).hexdigest()
