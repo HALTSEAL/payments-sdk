@@ -1,0 +1,13 @@
+{
+  "schema": "haltseal.workflow-evaluation.input.v1",
+  "workflow_alias": "Own-account recovery evaluation",
+  "profile": "own-account-usd10-local",
+  "stable_reference": "eval:one-obligation",
+  "paths": [
+    {"alias": "original", "route": "A", "entry_point": "Your original software execution point"},
+    {"alias": "replacement", "route": "B", "entry_point": "Your replacement software execution point"}
+  ],
+  "owners": {"engineer": "Integration engineer", "operations": "Payment operations owner", "budget": "Budget decision owner"},
+  "excluded_paths": ["Manual bank portals", "Other application senders", "Native provider integration", "Production payments"],
+  "current_controls": "Describe the current control and attach a separate Lab report if available."
+}

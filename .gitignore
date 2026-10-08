@@ -9,3 +9,7 @@ build/
 *-synthetic-result.json
 verification.json
 .DS_Store
+customer-evaluation-runs/
+**/evaluation-report.json
+**/integration-map.html
+**/pilot-decision.html
