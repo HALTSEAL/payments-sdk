@@ -10,7 +10,7 @@ only verifies the kit. It does not prove that customer code was connected.
 
 ## Start without a purchase
 
-Install [SDK RC2](../README.md#install), or use the free
+Install [SDK RC2](../README.md#choose-your-language), or use the free
 [Payment Control Lab](https://github.com/HALTSEAL/payment-control-lab) diagnostics.
 The SDK's ordinary terminal demo uses synthetic HTTP fixtures; it does not run
 the retained engine. [Request the local evaluator](https://haltseal.com/contact/?topic=payment-api#message)
@@ -50,9 +50,12 @@ it does not authenticate every imported application dependency.
 The current contract is **synthetic own-account USD 10 local evaluation** with
 two software hooks. Supplier, employee and payroll flows, native bank/provider
 connections, other paths and production payments need separate qualification.
-Use Python 3.12+ or Node.js 22+ and npm on Linux. The scoped bundle installs the
+Use Python 3.12+ with venv/pip or Node.js 22+ with npm on Linux, plus OpenSSL 3+
+with Ed25519 support for the local engine. The scoped bundle installs the
 unchanged SDK offline. Discuss application dependencies during setup rather
-than silently patching a client or introducing live credentials.
+than silently patching a client or introducing live credentials. Python can
+import application modules beside the adapter; JavaScript resolves relative
+imports from the adapter file. Keep this permitted application tree local.
 
 ## Check the input and wiring declaration
 
