@@ -16,6 +16,17 @@ This is a synthetic evaluation prerelease; production remains `NO_GO`.
 [Release downloads](https://github.com/HALTSEAL/payments-sdk/releases) ·
 [Recovery contract](docs/recovery.md)
 
+## Evaluate your own workflow
+
+The [Workflow Evaluation Kit guide](docs/evaluate-your-workflow.md) connects
+two customer software points, exact-original recovery and the application's
+HOLD/REFUSE stop branch to the unchanged SDK. The public Python/JavaScript
+adapters start unconfigured; expected-value stubs cannot pass. A separately
+supplied scoped local evaluator creates an integration map, execution record
+and owner decision from one run. Internal fixture success is labelled as kit
+verification. The current profile is synthetic own-account USD 10; native
+provider and production qualification remain separate.
+
 ## Choose your language
 
 Python requires Python 3.12+; JavaScript requires Node 22+. Each hosted exercise

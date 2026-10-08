@@ -43,6 +43,10 @@ jobs:
         with:
           node-version: ${{ matrix.node }}
       - run: python tools/check.py --output verification.json
+      - name: Customer workflow hook guards (no engine proof)
+        run: |
+          python -m unittest discover -s tests -p test_workflow_hooks.py -v
+          node --test tests/workflow-hooks.mjs
       - name: TypeScript integration contract
         run: python tools/check_types.py
       - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
