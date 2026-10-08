@@ -37,6 +37,18 @@ class WiringTests(unittest.TestCase):
         with self.assertRaisesRegex(RuntimeError, "INCOMPLETE"):
             load_adapter(EXAMPLES / "customer_adapter.py")
 
+    def test_customer_module_import_and_dataclass_are_supported(self):
+        with tempfile.TemporaryDirectory() as temp:
+            root = Path(temp)
+            (root / "local_payment_app.py").write_text("def execute(client, context):\n    return client.create_attempt(context['obligation_id'], operation_id=context['operation_id'], route=context['route'], approval_revision=context['approval_revision'])\n")
+            source = "from __future__ import annotations\nfrom dataclasses import dataclass\nfrom local_payment_app import execute\nfrom reference_adapter import map_reference, recover, stop\nadapter_kind='customer-code'\n@dataclass\nclass Mapping:\n    reference: str\noriginal=execute\nreplacement=execute\n"
+            path = root / "adapter.py"; path.write_text(source)
+            adapter = load_adapter(path)
+            observed = Hooks(adapter, self.client, "eval:one", "original")
+            self.assertEqual(observed.invoke("original", self.context), {"decision": "HOLD"})
+            self.assertEqual(self.client.sends, 1)
+            self.assertEqual(observed.events[0]["hook"], "original")
+
     def test_expected_value_without_sdk_call_is_rejected(self):
         self.adapter.original = lambda c, ctx: {"decision": "HOLD"}
         with self.assertRaisesRegex(RuntimeError, "exactly once"):

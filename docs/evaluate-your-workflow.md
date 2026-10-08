@@ -53,9 +53,15 @@ connections, other paths and production payments need separate qualification.
 Use Python 3.12+ with venv/pip or Node.js 22+ with npm on Linux, plus OpenSSL 3+
 with Ed25519 support for the local engine. The scoped bundle installs the
 unchanged SDK offline. Discuss application dependencies during setup rather
-than silently patching a client or introducing live credentials. Python can
-import application modules beside the adapter; JavaScript resolves relative
-imports from the adapter file. Keep this permitted application tree local.
+than silently patching a client or introducing live credentials.
+Python adapters can import sibling application modules and define dataclasses.
+If your application needs its own dependencies, pass
+`--python-environment /path/to/project/.venv/bin/python` to the scoped runner.
+Install the published RC2 SDK in that environment first; the runner verifies
+its runtime files against the released wheel and does not change the environment.
+JavaScript imports resolve from the adapter's own project while the injected
+client comes from the verified kit archive.
+Keep this permitted application tree local.
 
 ## Check the input and wiring declaration
 
