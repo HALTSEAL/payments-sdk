@@ -5,6 +5,7 @@ application paths are not observed or covered by the kit.
 """
 import importlib.util
 import json
+import sys
 import threading
 from pathlib import Path
 
@@ -12,8 +13,15 @@ HOOKS = ("map_reference", "original", "replacement", "recover", "stop")
 
 
 def load_adapter(path):
-    spec = importlib.util.spec_from_file_location("customer_workflow", Path(path))
+    path = Path(path).resolve()
+    # Match ordinary Python file execution: local application modules can be
+    # imported, and dataclasses can resolve the module that defines them.
+    # The scenario client imports the verified SDK before loading this code.
+    if str(path.parent) not in sys.path:
+        sys.path.append(str(path.parent))
+    spec = importlib.util.spec_from_file_location("customer_workflow", path)
     module = importlib.util.module_from_spec(spec)
+    sys.modules[spec.name] = module
     spec.loader.exec_module(module)
     if module.adapter_kind not in {"customer-code", "reference-fixture"}:
         raise RuntimeError("INCOMPLETE: adapter is unconfigured")
