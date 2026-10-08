@@ -16,6 +16,21 @@ This is a synthetic evaluation prerelease; production remains `NO_GO`.
 [Release downloads](https://github.com/HALTSEAL/payments-sdk/releases) ·
 [Recovery contract](docs/recovery.md)
 
+## Start with your question
+
+| Your next step | Start here | What you get |
+| --- | --- | --- |
+| Diagnose existing records or a decision function | [Payment Control Lab](https://github.com/HALTSEAL/payment-control-lab#five-minute-start) | Local diagnostic reports and an owner summary. No account needed. |
+| Run exact-original recovery with a client | [Payments SDK](https://github.com/HALTSEAL/payments-sdk#choose-your-language) | A pinned Python or JavaScript synthetic exercise. No account needed. |
+| Evaluate your actual application hooks | [Request the Workflow Evaluation Kit](https://haltseal.com/workspace/#kit) | Scoped private evaluator access after readiness review, then an integration map, execution record and owner decision. |
+
+The Lab diagnoses supplied evidence. The SDK exercises explicit recovery calls.
+The private kit observes connected local application hooks. A reference pass
+verifies the kit; it does not establish customer coverage or production readiness.
+Kit access does not require purchasing a pilot. Bring the resulting evidence to
+an owner review, then [review the standard pilot](https://haltseal.com/pilot/start/)
+or [ask about a different scope](https://haltseal.com/pricing/#request) if useful.
+
 ## Evaluate your own workflow
 
 The [Workflow Evaluation Kit guide](docs/evaluate-your-workflow.md) connects
@@ -126,13 +141,6 @@ SDK v2 validates exact operation/obligation echoes and complete attempt records.
 Both languages preserve original recovery context and bound the whole caller
 request. See [recovery](docs/recovery.md), [v2 migration](docs/migration-v2.md) and
 [security boundaries](docs/security-model.md).
-
-## Evaluate your workflow
-
-If two software paths can release the same obligation, bring one workflow and
-its original/replacement behavior to the
-[scoped pilot](https://haltseal.com/pricing/#workflow). Review its current price,
-readiness conditions and scope before requesting evaluation.
 
 ## Scope and license
 
