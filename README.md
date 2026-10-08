@@ -22,6 +22,7 @@ This is a synthetic evaluation prerelease; production remains `NO_GO`.
 | --- | --- | --- |
 | Diagnose existing records or a decision function | [Payment Control Lab](https://github.com/HALTSEAL/payment-control-lab#five-minute-start) | Local diagnostic reports and an owner summary. No account needed. |
 | Run exact-original recovery with a client | [Payments SDK](https://github.com/HALTSEAL/payments-sdk#choose-your-language) | A pinned Python or JavaScript synthetic exercise. No account needed. |
+| Exercise payment tools across ADK agents and sessions | [ADK example](examples/adk/README.md) | Real ADK runtime with a scripted model, retained identity and local fixed HTTP fixtures. No model API key needed. |
 | Evaluate your actual application hooks | [Request the Workflow Evaluation Kit](https://haltseal.com/workspace/#kit) | Scoped private evaluator access after readiness review, then an integration map, execution record and owner decision. |
 
 The Lab diagnoses supplied evidence. The SDK exercises explicit recovery calls.
@@ -41,6 +42,13 @@ supplied scoped local evaluator creates an integration map, execution record
 and owner decision from one run. Internal fixture success is labelled as kit
 verification. The current profile is synthetic own-account USD 10; native
 provider and production qualification remain separate.
+
+The [ADK example](examples/adk/README.md) keeps obligation, operation, route and
+approval bindings in the trusted host. Repeated agent calls, a session handoff
+and competing routes exercise recovery and HOLD/REFUSE handling against the
+existing local fixtures. Its record is labelled `ADK_FIXED_HTTP_FIXTURE_EVALUATED`;
+it does not establish customer coverage, kernel correctness or production
+readiness. Example dependencies are separate from the published SDK.
 
 ## Choose your language
 
