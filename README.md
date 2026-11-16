@@ -11,7 +11,8 @@ Application calls never automatically resend or select a replacement route.
 available from the pinned GitHub release; **npm publication is pending**.
 This is a synthetic evaluation prerelease; production remains `NO_GO`.
 
-[Browser sandbox](https://haltseal.com/sandbox/) ·
+[Complete synthetic Workspace demo](https://haltseal.com/workspace/demo/) ·
+[SDK fixed HTTP fixture exercise](https://haltseal.com/sandbox/) ·
 [API docs](https://haltseal.com/docs/payments/) ·
 [Release downloads](https://github.com/HALTSEAL/payments-sdk/releases) ·
 [Recovery contract](docs/recovery.md)
@@ -28,9 +29,10 @@ This is a synthetic evaluation prerelease; production remains `NO_GO`.
 The Lab diagnoses supplied evidence. The SDK exercises explicit recovery calls.
 The private kit observes connected local application hooks. A reference pass
 verifies the kit; it does not establish customer coverage or production readiness.
-Kit access does not require purchasing a pilot. Bring the resulting evidence to
-an owner review, then [review the standard pilot](https://haltseal.com/pilot/start/)
-or [ask about a different scope](https://haltseal.com/pricing/#request) if useful.
+Kit access does not require purchasing paid services. Bring the resulting evidence
+to an owner review, then [request a scoped qualification review](https://haltseal.com/pricing/#request)
+if useful. An inquiry takes no payment; any paid assistance requires a separately
+accepted proposal. Existing orders retain their accepted scope and terms.
 
 ## Evaluate your own workflow
 
