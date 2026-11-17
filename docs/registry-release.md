@@ -7,6 +7,11 @@ JavaScript `@haltseal/payments` version `0.2.0-rc.2` is available from the
 **npm publication is pending.** npm scope ownership still needs to be confirmed
 by the account owner before its first registry upload.
 
+The RC2 PyPI long description was prepared before its upload and still says
+publication is pending. Python RC2 is published; use the installation commands
+below. The versioned RC2 wheel, GitHub assets, checksums and release provenance
+remain unchanged. Current guidance does not create a new SDK release.
+
 ## Verified release checkpoint
 
 Checked on 2026-10-07. Python registry availability and the GitHub release files
