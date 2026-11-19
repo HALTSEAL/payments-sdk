@@ -29,10 +29,14 @@ This is a synthetic evaluation prerelease; production remains `NO_GO`.
 The Lab diagnoses supplied evidence. The SDK exercises explicit recovery calls.
 The private kit observes connected local application hooks. A reference pass
 verifies the kit; it does not establish customer coverage or production readiness.
-Kit access does not require purchasing paid services. Bring the resulting evidence
-to an owner review, then [request a scoped qualification review](https://haltseal.com/pricing/#request)
-if useful. An inquiry takes no payment; any paid assistance requires a separately
-accepted proposal. Existing orders retain their accepted scope and terms.
+Start with the [complete synthetic demo](https://haltseal.com/workspace/demo/)
+or a [free company Workspace Sandbox](https://haltseal.com/workspace/).
+Kit access and SDK exercises do not require a purchase. Bring the resulting
+evidence to an owner review, then [review qualification and pricing](https://haltseal.com/pricing/)
+if you need an installed evaluation or operating scope. A [scoped qualification
+inquiry](https://haltseal.com/pricing/#request) takes no payment. Optional
+assistance requires a separately agreed proposal. New standard pilot sales have ended;
+[existing orders retain their accepted terms](https://haltseal.com/pilot/welcome/).
 
 ## Evaluate your own workflow
 

@@ -136,15 +136,20 @@ attempt ID, correct the integration and rerun in a fresh output directory. Never
 send again just because a reply disappeared, or reuse a prior green report.
 An altered source pin or SDK archive is rejected before the engine campaign.
 
-## If a paid pilot is useful
+## Review the next scope
 
-Free public diagnostics and scoped local evaluator requests remain available
-independently. The optional [$2,500 Integration Pilot](https://haltseal.com/pilot/start/)
-applies the evaluation to one customer workflow and at most two agreed software
-paths, with recovery records, remaining conditions, owners and a written next
-integration decision. The existing readiness and ten-business-day delivery
-conditions and current purchase terms remain in force. A passing synthetic test
-does not automatically recommend buying or qualify production deployment.
+The [company Workspace Sandbox](https://haltseal.com/workspace/) is free.
+Public diagnostics and SDK exercises are available separately without a purchase.
+For an installed evaluation, agree the workflow, included release paths,
+recovery evidence, responsible owners and expected output before work begins.
+[Current pricing and qualification](https://haltseal.com/pricing/) describe the
+next step. Optional implementation assistance requires a separately accepted
+proposal and invoice. Production requires its own workflow and provider
+qualification; live payment control and usage charging are not activated.
+
+New standard pilot sales have ended. [Existing orders](https://haltseal.com/pilot/welcome/)
+retain their accepted price, scope, readiness, delivery, cancellation and refund
+terms. A passing synthetic test does not qualify production deployment.
 
 Keep the non-confidential workflow outline in the
 [Workspace](https://haltseal.com/workspace/#workflow). Keep code and generated
