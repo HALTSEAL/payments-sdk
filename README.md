@@ -11,7 +11,8 @@ Application calls never automatically resend or select a replacement route.
 available from the pinned GitHub release; **npm publication is pending**.
 This is a synthetic evaluation prerelease; production remains `NO_GO`.
 
-[Browser sandbox](https://haltseal.com/sandbox/) ·
+[Complete synthetic Workspace demo](https://haltseal.com/workspace/demo/) ·
+[SDK fixed HTTP fixture exercise](https://haltseal.com/sandbox/) ·
 [API docs](https://haltseal.com/docs/payments/) ·
 [Release downloads](https://github.com/HALTSEAL/payments-sdk/releases) ·
 [Recovery contract](docs/recovery.md)
@@ -32,8 +33,9 @@ Start with the [complete synthetic demo](https://haltseal.com/workspace/demo/)
 or a [free company Workspace Sandbox](https://haltseal.com/workspace/).
 Kit access and SDK exercises do not require a purchase. Bring the resulting
 evidence to an owner review, then [review qualification and pricing](https://haltseal.com/pricing/)
-if you need an installed evaluation or operating scope. Optional assistance
-requires a separately agreed proposal. New standard pilot sales have ended;
+if you need an installed evaluation or operating scope. A [scoped qualification
+inquiry](https://haltseal.com/pricing/#request) takes no payment. Optional
+assistance requires a separately agreed proposal. New standard pilot sales have ended;
 [existing orders retain their accepted terms](https://haltseal.com/pilot/welcome/).
 
 ## Evaluate your own workflow
